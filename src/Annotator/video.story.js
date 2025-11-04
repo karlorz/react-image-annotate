@@ -2,11 +2,14 @@
 
 import React from "react"
 
-import { storiesOf } from "@storybook/react"
 import { action } from "@storybook/addon-actions"
 import Annotator from "./"
 
-storiesOf("Annotator(video)", module).add("Video Annotator", () => {
+export default {
+  title: "Annotator(video)",
+}
+
+export const VideoAnnotator = () => {
   const props = {
     regionClsList: ["valid", "invalid"],
     enabledTools: ["select", "create-box", "create-polygon", "create-point"],
@@ -48,4 +51,4 @@ storiesOf("Annotator(video)", module).add("Video Annotator", () => {
       "https://s3.amazonaws.com/asset.workaround.online/SampleVideo_1280x720_1mb.mp4",
   }
   return <Annotator {...props} />
-})
+}

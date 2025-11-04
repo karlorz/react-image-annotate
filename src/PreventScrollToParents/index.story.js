@@ -2,12 +2,15 @@
 
 import React from "react"
 
-import { storiesOf } from "@storybook/react"
 import { action } from "@storybook/addon-actions"
 
 import RemoveScrollOnChildren from "./"
 
-storiesOf("RemoveScrollOnChildren", module).add("Basic", () => (
+export default {
+  title: "RemoveScrollOnChildren",
+}
+
+export const Basic = () => (
   <div style={{ width: "100vh", textAlign: "center", height: "200vh" }}>
     <RemoveScrollOnChildren>
       <div
@@ -20,4 +23,4 @@ storiesOf("RemoveScrollOnChildren", module).add("Basic", () => (
       />
     </RemoveScrollOnChildren>
   </div>
-))
+)

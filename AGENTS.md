@@ -9,21 +9,21 @@ React Image Annotate is a powerful React component library for image and video a
 ## Development Commands
 
 ### Core Commands
-- `yarn install` - Install dependencies
-- `NODE_OPTIONS=--openssl-legacy-provider yarn storybook` - Start Storybook development server on port 9090 (primary development environment)
-  - **Note**: Requires `NODE_OPTIONS=--openssl-legacy-provider` for Node.js 17+ due to OpenSSL 3.0 compatibility with webpack 4
-- `NODE_OPTIONS=--openssl-legacy-provider yarn start` - Start React development server
-- `yarn test` - Run tests with react-scripts
-- `yarn build` - Build library for distribution (outputs to ./dist)
-- `yarn dist` - Build and publish to npm
+- `yarn install` or `npm install` - Install dependencies
+- `yarn storybook` or `npm run storybook` - Start Storybook development server on port 9090 (primary development environment)
+  - **Note**: Now works natively with Node.js 20+ without requiring `NODE_OPTIONS=--openssl-legacy-provider`
+- `yarn start` or `npm start` - Start React development server
+- `yarn test` or `npm test` - Run tests with react-scripts
+- `yarn build` or `npm run build` - Build library for distribution (outputs to ./dist)
+- `yarn dist` or `npm run dist` - Build and publish to npm
 
 ### Code Quality
-- `yarn prettier` - Format all source files
-- `yarn prettier:test` - Check formatting without modifying files
+- `yarn prettier` or `npm run prettier` - Format all source files
+- `yarn prettier:test` or `npm run prettier:test` - Check formatting without modifying files
 
 ### Deployment
-- `yarn build:gh-pages` - Build demo site for GitHub Pages
-- `yarn gh-pages` - Build and deploy to GitHub Pages
+- `yarn build:gh-pages` or `npm run build:gh-pages` - Build demo site for GitHub Pages
+- `yarn gh-pages` or `npm run gh-pages` - Build and deploy to GitHub Pages
 
 ## Architecture Overview
 
@@ -71,7 +71,9 @@ The library supports multiple annotation types through the `enabledTools` prop:
 - **seamless-immutable** for immutable state management
 - **react-hotkeys** for keyboard shortcuts
 - **transformation-matrix-js** for canvas transformations
-- **Storybook** for component development and documentation
+- **Storybook v7** for component development and documentation
+- **react-scripts v5** (Create React App) for build tooling
+- **webpack 5** via Storybook and react-scripts
 - **Flow** type checking (note: `// @flow` comments present but not enforced)
 
 ## Development Notes
@@ -88,59 +90,11 @@ The library includes comprehensive keyboard shortcuts managed through `react-hot
 ### Testing
 Currently no test files are present in the codebase. The `yarn test` command uses react-scripts test runner but no tests are implemented.
 
-## Common Development Tasks
-
-### Adding a New Annotation Tool
-1. Add the tool to `enabledTools` array in component props
-2. Implement tool logic in `src/ImageCanvas/`
-3. Add reducer cases in `src/Annotator/reducers/general-reducer.js`
-4. Update the toolbar in `src/MainLayout/`
-
-### Modifying the Sidebar
-Sidebar components are in directories ending with `SidebarBox`. Each implements a self-contained panel that can be toggled in the main layout.
-
-### Customizing Region Labels
-Use the `RegionEditLabel` prop to provide a custom component for editing region properties.
-
-## Important Files
-
-- `src/MainLayout/types.js` - Type definitions for the application state
-- `src/ImageCanvas/region-tools.js` - Region manipulation utilities
-- `src/MainLayout/icon-dictionary.js` - Icon mappings for the UI
-- `.storybook/` - Storybook configuration
-- `.babelrc` - Babel configuration for the build process
-
-## Automated Dependency Management
-
-### Dependabot Configuration
-The repository includes automated dependency updates via GitHub Dependabot:
-
-- **Configuration**: `.github/dependabot.yml`
-- **Schedule**: Weekly updates every Monday at 9:00 AM EST
-- **Auto-merge**: Minor and patch updates are automatically approved and merged via `.github/workflows/dependabot-auto-merge.yml`
-- **Protected versions**: Major updates for React, webpack, and react-scripts are ignored to prevent breaking changes
-
-### Key Features
-- **Grouped updates**: Dependencies are grouped by type (production/development) for easier review
-- **Automatic labels**: PRs are tagged with `dependencies` and `automated`
-- **Security updates**: Vulnerable dependencies are automatically updated
-- **Major version protection**: Major updates require manual review and testing
-
-### Manual Override
-To manually trigger Dependabot or customize behavior:
-1. Navigate to the repository's "Insights" → "Dependency graph" → "Dependabot" tab
-2. Click "Check for updates" to trigger immediate dependency checks
-3. Edit `.github/dependabot.yml` to modify schedule, ignore rules, or grouping
-
 ## Node.js Version Compatibility
 
-**Important**: This project uses webpack 4 and Storybook 5, which require special configuration for Node.js 17+:
+**Current Status**: This project now supports Node.js 20+ natively!
 
-- **Issue**: Node.js 17+ uses OpenSSL 3.0, which removed legacy crypto algorithms
-- **Solution**: Use `NODE_OPTIONS=--openssl-legacy-provider` when running development commands
-- **Alternative**: Use Node.js 14 or 16 (LTS versions that include OpenSSL 1.1.1)
-
-To set this permanently, add to your shell profile (`~/.zshrc` or `~/.bashrc`):
-```bash
-export NODE_OPTIONS=--openssl-legacy-provider
-```
+- **Upgraded**: react-scripts 3.x → 5.x (webpack 4 → webpack 5)
+- **Upgraded**: Storybook 5.x → 7.x (webpack 5 support)
+- **No longer required**: `NODE_OPTIONS=--openssl-legacy-provider` flag
+- **Recommended**: Node.js 20 LTS or later
