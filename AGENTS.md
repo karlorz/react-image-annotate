@@ -1,10 +1,115 @@
 # AGENTS.md
 
-This file provides guidance to Coding Agents when working with code in this repository.
+This file provides guidance to Coding Agents when working with code in this repository, including migration strategy from the legacy React 17 version to the modern React 19 architecture.
 
 ## Overview
 
 React Image Annotate is a powerful React component library for image and video annotation. It provides a customizable interface for adding bounding boxes, points, polygons, and other annotations to images and videos.
+
+## Migration Strategy
+
+### Target Architecture
+The modern `@karlorz/image-annotate` (published at npm) represents the migration target with:
+- React 19 with TypeScript 5.9.3
+- Tailwind CSS 4.1.16 (while maintaining Material-UI v5 compatibility)
+- Vite 7.1.12 build system
+- Atomic Design pattern (atoms/molecules/organisms)
+
+### Finding Migration Documentation with context7
+
+**IMPORTANT**: When migrating components from React 17 to React 19, use context7 to find specific migration guides:
+
+```
+# For React version migration guides:
+1. Use context7 to search "React 18 migration guide"
+2. Use context7 to search "React 19 breaking changes"
+3. Use context7 to search "React concurrent features migration"
+
+# For Material-UI to Tailwind migration:
+1. Use context7 to search "Material-UI v5 with Tailwind CSS integration"
+2. Use context7 to search "MUI sx prop to Tailwind utilities"
+
+# For webpack to Vite migration:
+1. Use context7 to search "webpack to Vite migration guide"
+2. Use context7 to search "Vite configuration for React library"
+```
+
+### Migration Rules for Agents
+
+1. **DO NOT include large documentation snippets in code** - Instead, query context7 for specific migration topics
+2. **ALWAYS check context7 first** for React hooks changes, concurrent features, and breaking changes
+3. **Use deepwiki** for understanding the modern `@karlorz/image-annotate` architecture
+4. **Keep Material-UI v5 working** while adding Tailwind CSS support for new components
+
+### Material-UI + Tailwind CSS Compatibility
+
+To maintain both styling systems during migration:
+
+1. **Install both systems side-by-side**:
+   ```bash
+   # Keep Material-UI v5
+   npm install @mui/material @emotion/react @emotion/styled
+
+   # Add Tailwind CSS
+   npm install -D tailwindcss postcss autoprefixer
+   ```
+
+2. **Configure Tailwind to avoid conflicts**:
+   ```javascript
+   // tailwind.config.js
+   module.exports = {
+     important: '#tw-root', // Use ID selector to increase specificity
+     corePlugins: {
+       preflight: false, // Disable Tailwind's base reset to keep MUI styles
+     }
+   }
+   ```
+
+3. **Migration Pattern for Components**:
+   - Phase 1: Keep existing MUI components working
+   - Phase 2: Create new components with Tailwind
+   - Phase 3: Gradually migrate MUI components to Tailwind
+   - Phase 4: Remove MUI dependencies when complete
+
+4. **Styling Priority**:
+   - Use MUI's `sx` prop for existing components
+   - Use Tailwind classes for new components
+   - Use CSS modules for complex custom styles
+
+### Key Migration Checkpoints
+
+When migrating from React 17 to React 19, agents should verify:
+
+1. **React 18 Breaking Changes** (use context7 for details):
+   - Automatic batching behavior
+   - Strict Mode double rendering in development
+   - New root API (`createRoot` instead of `ReactDOM.render`)
+   - Suspense changes
+
+2. **React 19 Updates** (use context7 for specifics):
+   - Server Components support
+   - Actions and form handling
+   - Use hook improvements
+   - Compiler optimizations
+
+3. **State Management Migration**:
+   - From Redux patterns to React Context + useReducer
+   - From seamless-immutable to Immer or native immutability
+   - State update patterns with automatic batching
+
+4. **Build System Migration** (webpack → Vite):
+   - Module resolution differences
+   - Environment variable handling (import.meta.env)
+   - Dynamic imports and code splitting
+   - Development server configuration
+
+### Component Migration Priority
+
+Focus on migrating in this order:
+1. **Core Canvas Components** (ImageCanvas) - Critical path
+2. **Annotation Tools** (BoundingBoxTool, PolygonTool, etc.)
+3. **UI Controls** (Sidebars, Toolbars)
+4. **Utility Components** (Dialogs, Menus)
 
 ## Development Commands
 
