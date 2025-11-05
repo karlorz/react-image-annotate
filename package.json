@@ -30,7 +30,7 @@
     "react-json-view": "^1.19.1",
     "react-markdown": "^4.0.6",
     "react-material-workspace-layout": "^1.0.10",
-    "react-monaco-editor": "^0.59.0",
+    "@monaco-editor/react": "^4.6.0",
     "react-remove-scroll": "^2.7.1",
     "react-select": "^3.0.8",
     "react-syntax-highlighter": "^12.2.1",

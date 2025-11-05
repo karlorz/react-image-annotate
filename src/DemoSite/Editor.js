@@ -1,5 +1,3 @@
-// @flow
-
 import React, { useState } from "react"
 import Button from "@mui/material/Button"
 import { makeStyles } from "@mui/styles"
@@ -10,7 +8,7 @@ import Dialog from "@mui/material/Dialog"
 import DialogTitle from "@mui/material/DialogTitle"
 import DialogContent from "@mui/material/DialogContent"
 import DialogActions from "@mui/material/DialogActions"
-import MonacoEditor from "react-monaco-editor"
+import Editor from "@monaco-editor/react"
 
 const theme = createTheme()
 const useStyles = makeStyles((theme) => ({
@@ -150,7 +148,7 @@ const Editor = ({ onOpenAnnotator, lastOutput }: any) => {
           }
         >
           <div>
-            <MonacoEditor
+            <Editor
               value={currentJSONValue}
               language="javascript"
               onChange={(code) => {
@@ -167,6 +165,11 @@ const Editor = ({ onOpenAnnotator, lastOutput }: any) => {
               }}
               width="100%"
               height="550px"
+              theme="vs-dark"
+              options={{
+                minimap: { enabled: false },
+                automaticLayout: true,
+              }}
             />
           </div>
         </div>
@@ -216,11 +219,17 @@ const Editor = ({ onOpenAnnotator, lastOutput }: any) => {
         <Dialog fullScreen open={outputDialogOpen}>
           <DialogTitle>React Image Annotate Output</DialogTitle>
           <DialogContent style={{ minWidth: 400 }}>
-            <MonacoEditor
+            <Editor
               value={JSON.stringify(lastOutput, null, "  ")}
               language="javascript"
               width="100%"
               height="550px"
+              theme="vs-dark"
+              options={{
+                minimap: { enabled: false },
+                readOnly: true,
+                automaticLayout: true,
+              }}
             />
           </DialogContent>
           <DialogActions>
