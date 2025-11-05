@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/react-image-annotate/static/css/main.1f430a35.css",
-    "main.js": "/react-image-annotate/static/js/main.415ec894.js",
+    "main.js": "/react-image-annotate/static/js/main.b48b58d6.js",
     "index.html": "/react-image-annotate/index.html",
     "main.1f430a35.css.map": "/react-image-annotate/static/css/main.1f430a35.css.map",
-    "main.415ec894.js.map": "/react-image-annotate/static/js/main.415ec894.js.map"
+    "main.b48b58d6.js.map": "/react-image-annotate/static/js/main.b48b58d6.js.map"
   },
   "entrypoints": [
     "static/css/main.1f430a35.css",
-    "static/js/main.415ec894.js"
+    "static/js/main.b48b58d6.js"
   ]
 }
