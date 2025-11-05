@@ -1,6 +1,6 @@
 {
   "name": "@karlorz/react-image-annotate",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "description": "A powerful React component for image and video annotation with bounding boxes, polygons, points, and more",
   "main": "index.js",
   "author": "karlorz",
