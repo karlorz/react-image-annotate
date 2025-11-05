@@ -50,7 +50,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "homepage": "https://github.com/karlorz/react-image-annotate",
+  "homepage": "https://karlorz.github.io/react-image-annotate",
   "repository": {
     "type": "git",
     "url": "https://github.com/karlorz/react-image-annotate.git"
