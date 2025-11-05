@@ -8,7 +8,7 @@ import Dialog from "@mui/material/Dialog"
 import DialogTitle from "@mui/material/DialogTitle"
 import DialogContent from "@mui/material/DialogContent"
 import DialogActions from "@mui/material/DialogActions"
-import Editor from "@monaco-editor/react"
+import MonacoEditor from "@monaco-editor/react"
 
 const theme = createTheme()
 const useStyles = makeStyles((theme) => ({
@@ -148,7 +148,7 @@ const Editor = ({ onOpenAnnotator, lastOutput }: any) => {
           }
         >
           <div>
-            <Editor
+            <MonacoEditor
               value={currentJSONValue}
               language="javascript"
               onChange={(code) => {
@@ -219,7 +219,7 @@ const Editor = ({ onOpenAnnotator, lastOutput }: any) => {
         <Dialog fullScreen open={outputDialogOpen}>
           <DialogTitle>React Image Annotate Output</DialogTitle>
           <DialogContent style={{ minWidth: 400 }}>
-            <Editor
+            <MonacoEditor
               value={JSON.stringify(lastOutput, null, "  ")}
               language="javascript"
               width="100%"
