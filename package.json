@@ -81,7 +81,7 @@
     "@storybook/addon-actions": "^7.6.17",
     "@storybook/addon-links": "^7.6.17",
     "@storybook/addons": "^7.6.17",
-    "@storybook/preset-create-react-app": "^10.0.3",
+    "@storybook/preset-create-react-app": "^7.6.17",
     "@storybook/react": "^7.6.17",
     "@storybook/react-webpack5": "^7.6.17",
     "ajv": "^8.17.1",
