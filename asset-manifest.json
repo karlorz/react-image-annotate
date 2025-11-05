@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/karlorz/react-image-annotate/static/css/main.1f430a35.css",
-    "main.js": "/karlorz/react-image-annotate/static/js/main.25e32b13.js",
-    "index.html": "/karlorz/react-image-annotate/index.html",
-    "main.1f430a35.css.map": "/karlorz/react-image-annotate/static/css/main.1f430a35.css.map",
-    "main.25e32b13.js.map": "/karlorz/react-image-annotate/static/js/main.25e32b13.js.map"
+    "main.css": "/react-image-annotate/static/css/main.1f430a35.css",
+    "main.js": "/react-image-annotate/static/js/main.415ec894.js",
+    "index.html": "/react-image-annotate/index.html",
+    "main.1f430a35.css.map": "/react-image-annotate/static/css/main.1f430a35.css.map",
+    "main.415ec894.js.map": "/react-image-annotate/static/js/main.415ec894.js.map"
   },
   "entrypoints": [
     "static/css/main.1f430a35.css",
-    "static/js/main.25e32b13.js"
+    "static/js/main.415ec894.js"
   ]
 }
