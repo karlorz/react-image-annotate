@@ -71,7 +71,7 @@ All of the following properties can be defined on the Annotator...
 | `showPointDistances`     | `boolean`                                        | Show distances between points.                                                          | `false`       |
 | `pointDistancePrecision` | `number`                                         | Precision on displayed points (e.g. 3 => 0.123)                                         |               |
 | `onExit`                 | `MainLayoutState => any`                         | Called when "Save" is called.                                                           |               |
-| `RegionEditLabel`        | `Node`                                           | React Node overriding the form to update the region (see [`RegionLabel`](https://github.com/waoai/react-image-annotate/blob/master/src/RegionLabel/index.js))                                                          |               |
+| `RegionEditLabel`        | `Node`                                           | React Node overriding the form to update the region (see [`RegionLabel`](https://github.com/karlorz/react-image-annotate/blob/master/src/RegionLabel/index.js))                                                          |               |
 | `allowComments`          | `boolean`                                        | Show a textarea to add comments on each annotation.                                     | `false`       |
 | `hidePrev`               | `boolean`                                        | Hide `Previous Image` button from the header bar.                                       | `false`       |
 | `hideNext`               | `boolean`                                        | Hide `Next Image` button from the header bar.                                           | `false`       |
@@ -91,7 +91,7 @@ This project uses [react-storybook](https://storybook.js.org/). To begin develop
 
 A browser tab will automatically open with the project components.
 
-See more details in the [contributing guidelines](https://github.com/waoai/react-image-annotate/wiki/Setup-for-Development).
+See more details in the [contributing guidelines](https://github.com/karlorz/react-image-annotate/wiki/Setup-for-Development).
 
 ### Icons
 
