@@ -1,5 +1,3 @@
-// @flow
-
 import React from "react"
 import Button from "@mui/material/Button"
 import { styled } from "@mui/material/styles"
@@ -11,7 +9,7 @@ import GitHubButton from "react-github-btn"
 import "./github-markdown.css"
 import raw from "raw.macro"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
-import { docco } from "react-syntax-highlighter/dist/cjs/languages/hljs/javascript"
+import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs"
 
 const contentMd = raw("./content.md")
 const theme = createTheme()
