@@ -20,11 +20,21 @@ The best image/video annotation tool ever. [Check out the demo here](https://kar
 
 ## Usage
 
-`npm install react-image-annotate`
+Install with npm (recommended):
+
+```bash
+npm install @karlorz/react-image-annotate
+```
+
+Or with bun (alternative):
+
+```bash
+bun add @karlorz/react-image-annotate
+```
 
 ```javascript
 import React from "react";
-import ReactImageAnnotate from "react-image-annotate";
+import ReactImageAnnotate from "@karlorz/react-image-annotate";
 
 const App = () => (
   <ReactImageAnnotate
@@ -84,12 +94,17 @@ All of the following properties can be defined on the Annotator...
 
 ### Development
 
-This project uses [react-storybook](https://storybook.js.org/). To begin developing run the following commands in the cloned repo.
+This project uses [Storybook](https://storybook.js.org/) with Vite. To begin developing, run the following commands in the cloned repo:
 
-1. `yarn install`
-2. `yarn storybook`
+1. `npm install` (or `bun install`)
+2. `npm run storybook` (or `bun run storybook`)
 
-A browser tab will automatically open with the project components.
+A browser tab will automatically open with the project components at http://localhost:9090.
+
+### Package Manager
+
+- **Primary**: npm (recommended)
+- **Alternative**: bun (faster builds)
 
 See more details in the [contributing guidelines](https://github.com/karlorz/react-image-annotate/wiki/Setup-for-Development).
 

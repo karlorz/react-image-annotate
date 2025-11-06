@@ -13,7 +13,6 @@ The modern `@karlorz/image-annotate` (published at npm) represents the migration
 - React 19 with TypeScript 5.9.3
 - Tailwind CSS 4.1.16 (while maintaining Material-UI v5 compatibility)
 - Vite 7.1.12 build system
-- Atomic Design pattern (atoms/molecules/organisms)
 
 ### Finding Migration Documentation with context7
 
@@ -47,11 +46,15 @@ To maintain both styling systems during migration:
 
 1. **Install both systems side-by-side**:
    ```bash
-   # Keep Material-UI v5
+   # Keep Material-UI v6
    npm install @mui/material @emotion/react @emotion/styled
 
    # Add Tailwind CSS
    npm install -D tailwindcss postcss autoprefixer
+   
+   # Or with bun
+   bun add @mui/material @emotion/react @emotion/styled
+   bun add -D tailwindcss postcss autoprefixer
    ```
 
 2. **Configure Tailwind to avoid conflicts**:
@@ -111,24 +114,41 @@ Focus on migrating in this order:
 3. **UI Controls** (Sidebars, Toolbars)
 4. **Utility Components** (Dialogs, Menus)
 
+## Package Manager
+
+**Primary**: npm (recommended and default)
+**Alternative**: bun (for faster installs, optional)
+
+**Yarn is not used in this repository.** All lock files should be npm-based (package-lock.json).
+
 ## Development Commands
 
 ### Core Commands
-- `yarn install` or `npm install` - Install dependencies
-- `yarn storybook` or `npm run storybook` - Start Storybook development server on port 9090 (primary development environment)
+- `npm install` - Install dependencies (use `--legacy-peer-deps` if needed for React 19 compatibility)
+  - Alternative: `bun install`
+- `npm run storybook` - Start Storybook development server on port 9090 (primary development environment)
   - **Note**: Now works natively with Node.js 20+ without requiring `NODE_OPTIONS=--openssl-legacy-provider`
-- `yarn start` or `npm start` - Start React development server
-- `yarn test` or `npm test` - Run tests with react-scripts
-- `yarn build` or `npm run build` - Build library for distribution (outputs to ./dist)
-- `yarn dist` or `npm run dist` - Build and publish to npm
+  - Alternative: `bun run storybook`
+- `npm start` or `npm run dev` - Start Vite development server
+  - Alternative: `bun run dev`
+- `npm test` - Run tests with Vitest
+  - Alternative: `bun test`
+- `npm run build` - Build library for distribution (outputs to ./dist)
+  - Alternative: `bun run build`
+- `npm run dist` - Build and publish to npm
+  - Alternative: `bun run dist`
 
 ### Code Quality
-- `yarn prettier` or `npm run prettier` - Format all source files
-- `yarn prettier:test` or `npm run prettier:test` - Check formatting without modifying files
+- `npm run lint` - Check code with ESLint (alternative: `bun run lint`)
+- `npm run lint:fix` - Auto-fix ESLint issues (alternative: `bun run lint:fix`)
+- `npm run prettier` - Format source files (alternative: `bun run prettier`)
+- `npm run format` - Format all files including JSON/Markdown (alternative: `bun run format`)
 
 ### Deployment
-- `yarn build:gh-pages` or `npm run build:gh-pages` - Build demo site for GitHub Pages
-- `yarn gh-pages` or `npm run gh-pages` - Build and deploy to GitHub Pages
+- `npm run build:gh-pages` - Build demo site for GitHub Pages
+  - Alternative: `bun run build:gh-pages`
+- `npm run gh-pages` - Build and deploy to GitHub Pages
+  - Alternative: `bun run gh-pages`
 
 ## Architecture Overview
 
@@ -171,20 +191,22 @@ The library supports multiple annotation types through the `enabledTools` prop:
 
 ## Key Technologies
 
-- **React 17** with Hooks
-- **Material-UI v5** for UI components
-- **seamless-immutable** for immutable state management
+- **React 19** with Hooks and new features
+- **Material-UI v6** for UI components
+- **Immer** for immutable state management (migrated from seamless-immutable)
 - **react-hotkeys** for keyboard shortcuts
 - **transformation-matrix-js** for canvas transformations
-- **Storybook v7** for component development and documentation
-- **react-scripts v5** (Create React App) for build tooling
-- **webpack 5** via Storybook and react-scripts
-- **Flow** type checking (note: `// @flow` comments present but not enforced)
+- **Storybook v8/10** with Vite for component development and documentation
+- **Vite 7.1.12** for build tooling and dev server
+- **Vitest** for testing
+- **ESLint 9** with React 19 plugins for code quality
+- **Prettier** for code formatting
+- **Flow** type checking (note: `// @flow` comments present but being phased out)
 
 ## Development Notes
 
 ### State Management
-The application uses a custom Redux-like pattern without Redux itself. The state is made immutable using seamless-immutable, and all updates go through reducers.
+The application uses a custom Redux-like pattern without Redux itself. The state is made immutable using Immer (migrated from seamless-immutable), and all updates go through reducers. See `src/utils/immutable-helpers.js` for the compatibility layer.
 
 ### Coordinate Systems
 Annotations use normalized coordinates (0-1 range) relative to image dimensions, making them resolution-independent.
@@ -193,13 +215,25 @@ Annotations use normalized coordinates (0-1 range) relative to image dimensions,
 The library includes comprehensive keyboard shortcuts managed through `react-hotkeys` and the `ShortcutsManager` component.
 
 ### Testing
-Currently no test files are present in the codebase. The `yarn test` command uses react-scripts test runner but no tests are implemented.
+Tests are configured with Vitest. Run with `npm test` or `bun test`.
 
-## Node.js Version Compatibility
+## Node.js and Runtime Compatibility
 
-**Current Status**: This project now supports Node.js 20+ natively!
+**Current Status**: This project supports Node.js 20+ and Bun!
 
-- **Upgraded**: react-scripts 3.x → 5.x (webpack 4 → webpack 5)
-- **Upgraded**: Storybook 5.x → 7.x (webpack 5 support)
+### Migration Completed
+- **React**: 17.0.0 → 19.0.0 ✅
+- **Build System**: Create React App (webpack) → Vite 7.1.12 ✅
+- **Storybook**: 7.x (webpack) → 8.x/10.x (Vite) ✅
+- **State Management**: seamless-immutable → Immer ✅
+- **Material-UI**: v5 → v6 ✅
+
+### Requirements
+- **Node.js**: 20 LTS or later (recommended)
+- **npm**: 9+ or **bun**: latest
 - **No longer required**: `NODE_OPTIONS=--openssl-legacy-provider` flag
-- **Recommended**: Node.js 20 LTS or later
+
+### Package Manager Notes
+- Use `npm install --legacy-peer-deps` for React 19 peer dependency compatibility
+- Or use `bun install` which handles peer dependencies automatically
+- **Do not use yarn** - this repository uses npm/bun only

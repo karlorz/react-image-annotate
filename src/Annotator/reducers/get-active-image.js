@@ -1,4 +1,4 @@
-import { getIn } from "seamless-immutable"
+import { getIn } from "../../utils/immutable-helpers"
 
 export default (state) => {
   let currentImageIndex = null,

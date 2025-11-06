@@ -1,7 +1,7 @@
 export const loadImage = (imageSrc) => {
   // Check if image is already loaded in a page element
   let image = Array.from(document.getElementsByTagName("img")).find(
-    (img) => img.src === imageSrc
+    (img) => img.src === imageSrc,
   )
 
   const canvas = document.createElement("canvas")
@@ -22,7 +22,7 @@ export const loadImage = (imageSrc) => {
         0,
         0,
         image.naturalWidth,
-        image.naturalHeight
+        image.naturalHeight,
       )
       resolve(imageData)
     }
