@@ -212,6 +212,82 @@ export const MainLayout = ({
   const nextImageHasRegions =
     !nextImage || (nextImage.regions && nextImage.regions.length > 0)
 
+  const headerLeftSideItems = []
+  if (state.annotationType === "video") {
+    headerLeftSideItems.push(
+      <KeyframeTimeline
+        key="timeline"
+        currentTime={state.currentVideoTime}
+        duration={state.videoDuration}
+        onChangeCurrentTime={action("CHANGE_VIDEO_TIME", "newTime")}
+        keyframes={state.keyframes}
+      />,
+    )
+  } else if (activeImage) {
+    headerLeftSideItems.push(
+      <div key="active-image-name" className={classes.headerTitle}>
+        {activeImage.name}
+      </div>,
+    )
+  }
+
+  const rightSidebarItems = [
+    debugModeOn && (
+      <DebugBox
+        key="debug-box"
+        state={debugModeOn}
+        lastAction={state.lastAction}
+      />
+    ),
+    state.taskDescription && (
+      <TaskDescription
+        key="task-description"
+        description={state.taskDescription}
+      />
+    ),
+    state.regionClsList && (
+      <ClassSelectionMenu
+        key="class-selection-menu"
+        selectedCls={state.selectedCls}
+        regionClsList={state.regionClsList}
+        onSelectCls={action("SELECT_CLASSIFICATION", "cls")}
+      />
+    ),
+    state.labelImages && (
+      <TagsSidebarBox
+        key="tags-sidebar"
+        currentImage={activeImage}
+        imageClsList={state.imageClsList}
+        imageTagList={state.imageTagList}
+        onChangeImage={action("CHANGE_IMAGE", "delta")}
+        expandedByDefault
+      />
+    ),
+    <RegionSelector
+      key="region-selector"
+      regions={activeImage ? activeImage.regions : emptyArr}
+      onSelectRegion={action("SELECT_REGION", "region")}
+      onDeleteRegion={action("DELETE_REGION", "region")}
+      onChangeRegion={action("CHANGE_REGION", "region")}
+    />,
+    state.keyframes && (
+      <KeyframesSelector
+        key="keyframes-selector"
+        onChangeVideoTime={action("CHANGE_VIDEO_TIME", "newTime")}
+        onDeleteKeyframe={action("DELETE_KEYFRAME", "time")}
+        onChangeCurrentTime={action("CHANGE_VIDEO_TIME", "newTime")}
+        currentTime={state.currentVideoTime}
+        duration={state.videoDuration}
+        keyframes={state.keyframes}
+      />
+    ),
+    <HistorySidebarBox
+      key="history-sidebar"
+      history={state.history}
+      onRestoreHistory={action("RESTORE_HISTORY")}
+    />,
+  ].filter(Boolean)
+
   return (
     <ThemeProvider theme={theme}>
       <FullScreenContainer>
@@ -241,18 +317,7 @@ export const MainLayout = ({
               iconDictionary={iconDictionary}
               hideHeader={hideHeader}
               hideHeaderText={hideHeaderText}
-              headerLeftSide={[
-                state.annotationType === "video" ? (
-                  <KeyframeTimeline
-                    currentTime={state.currentVideoTime}
-                    duration={state.videoDuration}
-                    onChangeCurrentTime={action("CHANGE_VIDEO_TIME", "newTime")}
-                    keyframes={state.keyframes}
-                  />
-                ) : activeImage ? (
-                  <div className={classes.headerTitle}>{activeImage.name}</div>
-                ) : null,
-              ].filter(Boolean)}
+              headerLeftSide={headerLeftSideItems}
               headerItems={[
                 !hidePrev && { name: "Prev" },
                 !hideNext && { name: "Next" },
@@ -343,56 +408,7 @@ export const MainLayout = ({
                 .filter(
                   (a) => a.alwaysShowing || state.enabledTools.includes(a.name),
                 )}
-              rightSidebarItems={[
-                debugModeOn && (
-                  <DebugBox state={debugModeOn} lastAction={state.lastAction} />
-                ),
-                state.taskDescription && (
-                  <TaskDescription description={state.taskDescription} />
-                ),
-                state.regionClsList && (
-                  <ClassSelectionMenu
-                    selectedCls={state.selectedCls}
-                    regionClsList={state.regionClsList}
-                    onSelectCls={action("SELECT_CLASSIFICATION", "cls")}
-                  />
-                ),
-                state.labelImages && (
-                  <TagsSidebarBox
-                    currentImage={activeImage}
-                    imageClsList={state.imageClsList}
-                    imageTagList={state.imageTagList}
-                    onChangeImage={action("CHANGE_IMAGE", "delta")}
-                    expandedByDefault
-                  />
-                ),
-                // (state.images?.length || 0) > 1 && (
-                //   <ImageSelector
-                //     onSelect={action("SELECT_REGION", "region")}
-                //     images={state.images}
-                //   />
-                // ),
-                <RegionSelector
-                  regions={activeImage ? activeImage.regions : emptyArr}
-                  onSelectRegion={action("SELECT_REGION", "region")}
-                  onDeleteRegion={action("DELETE_REGION", "region")}
-                  onChangeRegion={action("CHANGE_REGION", "region")}
-                />,
-                state.keyframes && (
-                  <KeyframesSelector
-                    onChangeVideoTime={action("CHANGE_VIDEO_TIME", "newTime")}
-                    onDeleteKeyframe={action("DELETE_KEYFRAME", "time")}
-                    onChangeCurrentTime={action("CHANGE_VIDEO_TIME", "newTime")}
-                    currentTime={state.currentVideoTime}
-                    duration={state.videoDuration}
-                    keyframes={state.keyframes}
-                  />
-                ),
-                <HistorySidebarBox
-                  history={state.history}
-                  onRestoreHistory={action("RESTORE_HISTORY")}
-                />,
-              ].filter(Boolean)}
+              rightSidebarItems={rightSidebarItems}
             >
               {canvas}
             </Workspace>

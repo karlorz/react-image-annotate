@@ -1,5 +1,5 @@
 // Using React 19 - Flow types removed for migration testing
-import React, { useEffect, useReducer } from "react"
+import React, { useEffect, useReducer, useRef } from "react"
 import makeImmutable, { without } from "../utils/immutable-helpers"
 
 import MainLayout from "../MainLayout"
@@ -124,14 +124,26 @@ export const Annotator = ({
     })
   })
 
+  const stateRef = useRef(state)
+  useEffect(() => {
+    stateRef.current = state
+  }, [state])
+
   useEffect(() => {
     if (selectedImage === undefined) return
+    const currentState = stateRef.current
+    if (!currentState) return
+    if (currentState.selectedImage === selectedImage) return
+    const image = currentState.images
+      ? currentState.images[selectedImage]
+      : undefined
+    if (!image) return
     dispatchToReducer({
       type: "SELECT_IMAGE",
       imageIndex: selectedImage,
-      image: state.images[selectedImage],
+      image,
     })
-  }, [selectedImage, state.images])
+  }, [selectedImage, images])
 
   if (!images && !videoSrc)
     return 'Missing required prop "images" or "videoSrc"'

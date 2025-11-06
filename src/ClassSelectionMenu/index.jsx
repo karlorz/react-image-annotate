@@ -84,6 +84,7 @@ export const ClassSelectionMenu = ({
       >
         {regionClsList.map((label, index) => (
           <LabelContainer
+            key={`${label}-${index}`}
             className={classnames({ selected: label === selectedCls })}
             onClick={() => onSelectCls(label)}
           >
