@@ -237,3 +237,11 @@ Tests are configured with Vitest. Run with `npm test` or `bun test`.
 - Use `npm install --legacy-peer-deps` for React 19 peer dependency compatibility
 - Or use `bun install` which handles peer dependencies automatically
 - **Do not use yarn** - this repository uses npm/bun only
+
+## Recent Updates
+
+### v1.10.6+ - React 18 & 19 Compatibility (2025-01-06)
+
+**Fixed: "Invalid hook call" errors when using the package with React 18**
+
+The package now properly supports both React 18 and React 19 through corrected peer dependencies:
