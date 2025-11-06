@@ -1,13 +1,11 @@
-// @flow
-
-import type {
-  MainLayoutImageAnnotationState,
-  Action,
-} from "../../MainLayout/types"
-import { setIn } from "seamless-immutable"
+// // @flow
+//
+//   MainLayoutImageAnnotationState,
+//   Action,
+import { setIn } from "../../utils/immutable-helpers"
 import getActiveImage from "./get-active-image"
 
-export default (state: MainLayoutImageAnnotationState, action: Action) => {
+export default (state, action) => {
   const { currentImageIndex, pathToActiveImage, activeImage } =
     getActiveImage(state)
 

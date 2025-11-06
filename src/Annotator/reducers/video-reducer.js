@@ -1,14 +1,12 @@
-// @flow
-
-import type {
-  MainLayoutVideoAnnotationState,
-  Action,
-} from "../../MainLayout/types"
-import { setIn, without } from "seamless-immutable"
+// // @flow
+//
+//   MainLayoutVideoAnnotationState,
+//   Action,
+import { setIn, without } from "../../utils/immutable-helpers"
 import getImpliedVideoRegions from "./get-implied-video-regions"
 import { saveToHistory } from "./history-handler.js"
 
-export default (state: MainLayoutVideoAnnotationState, action: Action) => {
+export default (state, action) => {
   const copyImpliedRegions = () => {
     return setIn(
       saveToHistory(state, "Add Keyframe"),
@@ -16,9 +14,9 @@ export default (state: MainLayoutVideoAnnotationState, action: Action) => {
       {
         regions: getImpliedVideoRegions(
           state.keyframes,
-          state.currentVideoTime
+          state.currentVideoTime,
         ),
-      }
+      },
     )
   }
 
@@ -28,6 +26,7 @@ export default (state: MainLayoutVideoAnnotationState, action: Action) => {
       if (typeof duration === "number") {
         return setIn(state, ["videoDuration"], duration * 1000)
       }
+      break
     }
     case "HEADER_BUTTON_CLICKED": {
       switch (action.buttonName.toLowerCase()) {
@@ -35,7 +34,10 @@ export default (state: MainLayoutVideoAnnotationState, action: Action) => {
           return setIn(state, ["videoPlaying"], true)
         case "pause":
           return setIn(state, ["videoPlaying"], false)
+        default:
+          break
       }
+      break
     }
     case "CHANGE_VIDEO_TIME": {
       return setIn(state, ["currentVideoTime"], action.newTime)

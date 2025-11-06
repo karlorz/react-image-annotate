@@ -1,13 +1,10 @@
-// @flow
-
-import type { Region } from "../../ImageCanvas/region-tools.js"
+// // @flow
+//
+// import ../../ImageCanvas/region-tools.js
 
 const emptyArr = []
 
-export default (
-  keyframes: { [string | number]: { regions: Array<Region> } },
-  time: number
-) => {
+export default (keyframes, time) => {
   if (keyframes[time || 0]) {
     return keyframes[time || 0].regions
   }

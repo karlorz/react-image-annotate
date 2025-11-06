@@ -25,8 +25,8 @@ function reverseParseColor(rrggbb) {
   return parseInt(bbggrr, 16)
 }
 
-export const colorInts: Array<number> = colors.map(
-  (c) => (reverseParseColor(c) | transparency) >>> 0
+export const colorInts = colors.map(
+  (c) => (reverseParseColor(c) | transparency) >>> 0,
 )
 
 export default colors

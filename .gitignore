@@ -5,11 +5,21 @@
 /.pnp
 .pnp.js
 
+# Package manager locks (npm preferred, bun alternative)
+yarn.lock
+yarn-error.log
+
 # testing
 /coverage
 
 # production
 /build
+/dist
+
+# Vite
+.vite
+dist-ssr
+*.local
 
 # misc
 .DS_Store
@@ -23,9 +33,9 @@ yarn-debug.log*
 yarn-error.log*
 storybook-static
 
-dist
-
 secret.*
 secret.story.*
 *.secret.*
 CLAUDE.local.md
+.yarn-removal-note.md
+FILE_CLEANUP_NOTES.md

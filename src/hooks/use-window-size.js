@@ -25,7 +25,7 @@ const useWindowSize = (initialWidth = Infinity, initialHeight = Infinity) => {
     return () => {
       window.removeEventListener("resize", handler)
     }
-  }, [])
+  }, [isClient, setState])
 
   useInterval(() => {
     if (!isClient) return

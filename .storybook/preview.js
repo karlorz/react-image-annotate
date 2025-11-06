@@ -1,22 +1,22 @@
-// @flow
+// React 19 compatibility shim - must be imported before React
+import '../src/utils/react19-compat.js'
 
-import React from "react"
-import Theme from "../src/Theme"
+import React from 'react'
+import Theme from '../src/Theme'
 
-export const decorators = [
-  (Story) => (
-    <Theme>
-      <Story />
-    </Theme>
-  ),
-]
-
-export const parameters = {
-  actions: { argTypesRegex: "^on[A-Z].*" },
-  controls: {
-    matchers: {
-      color: /(background|color)$/i,
-      date: /Date$/,
-    },
-  },
+const preview = {
+  decorators: [
+    (Story) => React.createElement(Theme, null, React.createElement(Story))
+  ],
+  parameters: {
+    actions: { argTypesRegex: '^on[A-Z].*' },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/
+      }
+    }
+  }
 }
+
+export default preview
