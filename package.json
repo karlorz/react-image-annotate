@@ -79,7 +79,7 @@
     "dist": "npm run build && cd dist && npm publish",
     "storybook": "storybook dev -p 9090",
     "build-storybook": "storybook build",
-    "build:gh-pages": "vite build --mode production && mkdir -p dist/demo && cp dist/index.html dist/demo/index.html",
+    "build:gh-pages": "vite build --mode site && mkdir -p dist/demo && cp dist/index.html dist/demo/index.html",
     "gh-pages": "npm run build:gh-pages && gh-pages -d dist",
     "test": "vitest",
     "test:ui": "vitest --ui",
