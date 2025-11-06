@@ -6,13 +6,15 @@ import { resolve } from 'path'
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   const isSiteBuild = mode === 'site'
+  const isBuild = command === 'build'
+  const useJsxDev = !isBuild
 
   const commonConfig = {
     plugins: [
       react({
         // Only enable Babel when building the library bundle
         babel:
-          command === 'build' && !isSiteBuild
+          isBuild && !isSiteBuild
             ? {
                 babelrc: true,
                 configFile: true,
@@ -29,7 +31,7 @@ export default defineConfig(({ command, mode }) => {
     publicDir: 'public',
     esbuild: {
       jsx: 'automatic', // Handle JSX in .js files
-      jsxDev: true,
+      jsxDev: useJsxDev,
     },
     resolve: {
       extensions: ['.mjs', '.js', '.mts', '.ts', '.jsx', '.tsx', '.json'],
