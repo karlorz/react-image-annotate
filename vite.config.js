@@ -10,9 +10,9 @@ export default defineConfig(({ command, mode }) => {
   const commonConfig = {
     plugins: [
       react({
-        // Disable Babel in dev mode (Vite uses esbuild), only use it for build commands
+        // Only enable Babel when building the library bundle
         babel:
-          command === 'build'
+          command === 'build' && !isSiteBuild
             ? {
                 babelrc: true,
                 configFile: true,
