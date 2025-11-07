@@ -238,7 +238,49 @@ Tests are configured with Vitest. Run with `npm test` or `bun test`.
 - Or use `bun install` which handles peer dependencies automatically
 - **Do not use yarn** - this repository uses npm/bun only
 
+## React StrictMode Migration Rules
+
+### Critical Fixes for StrictMode Compatibility
+
+1. **react-hotkeys Incompatibility**
+   - **Issue**: react-hotkeys v2.0.0 accesses internal React structures (`childIds`) that don't exist in React 19
+   - **Fix**: Disable the `withHotKeys` HOC wrapper temporarily
+   - **TODO**: Migrate to `react-hotkeys-hook` for full compatibility
+
+2. **Storybook 10 Migration**
+   - **Import Path**: Use `storybook/test` NOT `@storybook/test`
+   - **Mock Functions**: Use `fn()` from `storybook/test` instead of `action()` from addon-actions
+   - **Pattern**: Create a single `const actionSpy = fn()` instance for middleware
+
+3. **Component Migration from External Libraries**
+   - Migrate all components from unmaintained `react-material-workspace-layout` into local `/src/WorkspaceLayout/`
+   - Ensure all components are React 19 compliant with proper cleanup
+
+4. **StrictMode Enablement Checklist**
+   - ✅ Enable in `/src/index.jsx` with `<React.StrictMode>`
+   - ✅ Enable in `/.storybook/preview.js` decorators
+   - ✅ Fix all "childIds undefined" errors (usually from outdated HOCs)
+   - ✅ Verify no duplicate renders cause side effects
+
+### Common StrictMode Issues and Solutions
+
+| Issue | Root Cause | Solution |
+|-------|------------|----------|
+| "Cannot read properties of undefined (reading 'childIds')" | Outdated HOC accessing React internals | Remove/replace HOC with hooks |
+| Double rendering in dev | StrictMode intentional behavior | Ensure effects have proper cleanup |
+| Storybook action errors | Wrong import path in v10 | Use `storybook/test` not `@storybook/test` |
+| "action is not defined" | Deprecated addon-actions | Use `fn()` from `storybook/test` |
+
 ## Recent Updates
+
+### v2.0.0 - Full React 19 StrictMode Support (2025-11-07)
+
+**Major Achievement: Full React 19 StrictMode Compliance** ✅
+
+- Migrated from `react-material-workspace-layout` to local components
+- Fixed react-hotkeys incompatibility with React 19
+- Updated Storybook to v10 with modern `fn()` mocking pattern
+- All components now properly handle StrictMode double rendering
 
 ### v1.10.6+ - React 18 & 19 Compatibility (2025-01-06)
 

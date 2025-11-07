@@ -2,7 +2,7 @@
 
 import React, { useState } from "react"
 
-import { action as actionAddon } from "storybook/actions"
+import { fn } from "storybook/test"
 import exampleImage from "../ImageCanvas/seves_desk.story.jpg"
 import bikeImg1 from "./bike-pic.png"
 import bikeImg2 from "./bike-pic2.png"
@@ -13,9 +13,10 @@ import Annotator from "./"
 
 import { testRegions } from "../ImageCanvas/index.story"
 
+const actionSpy = fn()
 const middlewares = [
   (store) => (next) => (action) => {
-    actionAddon(action.type)(action)
+    actionSpy(action)
     return next(action)
   },
 ]
@@ -26,7 +27,7 @@ export default {
 
 export const Basic = () => (
   <Annotator
-    onExit={actionAddon("onExit")}
+    onExit={fn()}
     middlewares={middlewares}
     labelImages
     regionClsList={["Alpha", "Beta", "Charlie", "Delta"]}
@@ -57,7 +58,7 @@ export const Basic = () => (
 
 export const BasicAllowComments = () => (
   <Annotator
-    onExit={actionAddon("onExit")}
+    onExit={fn()}
     middlewares={middlewares}
     labelImages
     regionClsList={["Alpha", "Beta", "Charlie", "Delta"]}
@@ -94,10 +95,10 @@ BasicAllowComments.story = {
 export const FixedSizeContainer = () => (
   <div style={{ width: 500, height: 500 }}>
     <Annotator
-      onExit={actionAddon("onExit")}
+      onExit={fn()}
       middlewares={[
         (store) => (next) => (action) => {
-          actionAddon(action.type)(action)
+          actionSpy(action)
           return next(action)
         },
       ]}
@@ -132,12 +133,12 @@ export const FixedSizeContainer = () => (
 export const ShrunkAnnotatorTestFullscreen = () => (
   <div style={{ padding: 100 }}>
     <Annotator
-      onExit={actionAddon("onExit")}
+      onExit={fn()}
       regionClsList={["Alpha", "Beta", "Charlie", "Delta"]}
       regionTagList={["tag1", "tag2", "tag3"]}
       middlewares={[
         (store) => (next) => (action) => {
-          actionAddon(action.type)(action)
+          actionSpy(action)
           return next(action)
         },
       ]}
@@ -158,7 +159,7 @@ ShrunkAnnotatorTestFullscreen.story = {
 
 export const AnnotatorWONoRegionLabelsOrImageLabels = () => (
   <Annotator
-    onExit={actionAddon("onExit")}
+    onExit={fn()}
     middlewares={middlewares}
     images={[
       {
@@ -176,7 +177,7 @@ AnnotatorWONoRegionLabelsOrImageLabels.story = {
 
 export const AnnotatorWithNoEnabledTools = () => (
   <Annotator
-    onExit={actionAddon("onExit")}
+    onExit={fn()}
     enabledTools={[]}
     showTags={false}
     middlewares={middlewares}
@@ -251,7 +252,7 @@ export const CarAnnotation = () => (
     onExit={(out) => {
       window.lastOutput = out
       console.log(JSON.stringify(out.images))
-      actionAddon("onExit")(out)
+      fn()(out)
     }}
     middlewares={middlewares}
     labelImages
@@ -406,11 +407,11 @@ export const CarAnnotation = () => (
 export const AnnotatorBlocksScrollFromPropagating = () => (
   <div style={{ height: "200vh" }}>
     <Annotator
-      onExit={actionAddon("onExit")}
+      onExit={fn()}
       showTags={false}
       middlewares={[
         (store) => (next) => (action) => {
-          actionAddon(action.type)(action)
+          actionSpy(action)
           return next(action)
         },
       ]}
@@ -440,11 +441,11 @@ export const AnnotatorShouldNotExpandBeyondParent = () => (
     }}
   >
     <Annotator
-      onExit={actionAddon("onExit")}
+      onExit={fn()}
       showTags={false}
       middlewares={[
         (store) => (next) => (action) => {
-          actionAddon(action.type)(action)
+          actionSpy(action)
           return next(action)
         },
       ]}
@@ -472,11 +473,11 @@ export const VideoWithFramesAsEachImage = () => (
     }}
   >
     <Annotator
-      onExit={actionAddon("onExit")}
+      onExit={fn()}
       showTags={false}
       middlewares={[
         (store) => (next) => (action) => {
-          actionAddon(action.type)(action)
+          actionSpy(action)
           return next(action)
         },
       ]}
@@ -511,7 +512,7 @@ export const KeyframeVideo = () => (
     <Annotator
       onExit={(...args) => {
         console.log(...args)
-        actionAddon("onExit")(...args)
+        fn()(...args)
       }}
       showTags
       videoSrc="https://s3.amazonaws.com/asset.workaround.online/SampleVideo_1280x720_1mb.mp4"
@@ -584,13 +585,13 @@ export const OverrideNextPrevButtonHandling = () => {
 
   return (
     <Annotator
-      onExit={actionAddon("onExit")}
+      onExit={fn()}
       onNextImage={() => {
-        actionAddon("onNextImage")()
+        fn()()
         changeSelectedImageIndex((selectedImageIndex + 1) % 3)
       }}
       onPrevImage={() => {
-        actionAddon("onPrevImage")()
+        fn()()
         changeSelectedImageIndex((selectedImageIndex - 1 + 3) % 3)
       }}
       labelImages
@@ -651,7 +652,7 @@ export const OverrideRegionEditLabel = () => {
 
   return (
     <Annotator
-      onExit={actionAddon("onExit")}
+      onExit={fn()}
       labelImages
       selectedImage={images[0]}
       RegionEditLabel={NewRegionEditLabel}
@@ -683,12 +684,12 @@ export const TwoOnSamplePageWHotkeys = () => {
       <div>
         <div style={{ height: 600 }}>
           <Annotator
-            onExit={actionAddon("onExit")}
+            onExit={fn()}
             regionClsList={["Alpha", "Beta", "Charlie", "Delta"]}
             imageClsList={["Alpha", "Beta", "Charlie", "Delta"]}
             middlewares={[
               (store) => (next) => (action) => {
-                actionAddon(action.type)(action)
+                actionSpy(action)
                 return next(action)
               },
             ]}
@@ -703,10 +704,10 @@ export const TwoOnSamplePageWHotkeys = () => {
         </div>
         <div style={{ height: 600 }}>
           <Annotator
-            onExit={actionAddon("onExit")}
+            onExit={fn()}
             middlewares={[
               (store) => (next) => (action) => {
-                actionAddon(action.type)(action)
+                actionSpy(action)
                 return next(action)
               },
             ]}
@@ -730,7 +731,7 @@ TwoOnSamplePageWHotkeys.story = {
 
 export const CoRsErrorPixelSegmentation = () => (
   <Annotator
-    onExit={actionAddon("onExit")}
+    onExit={fn()}
     middlewares={middlewares}
     labelImages
     fullImageSegmentationMode
@@ -750,7 +751,7 @@ CoRsErrorPixelSegmentation.story = {
 
 export const ModifyAllowedArea = () => (
   <Annotator
-    onExit={actionAddon("onExit")}
+    onExit={fn()}
     middlewares={middlewares}
     labelImages
     fullImageSegmentationMode
@@ -768,7 +769,7 @@ export const ModifyAllowedArea = () => (
 
 export const HideNextHideHeaderText = () => (
   <Annotator
-    onExit={actionAddon("onExit")}
+    onExit={fn()}
     labelImages
     hideNext
     hideHeaderText
@@ -790,7 +791,7 @@ HideNextHideHeaderText.story = {
 
 export const HideHeader = () => (
   <Annotator
-    onExit={actionAddon("onExit")}
+    onExit={fn()}
     labelImages
     hideHeader
     fullImageSegmentationMode

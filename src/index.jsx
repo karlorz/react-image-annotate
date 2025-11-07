@@ -21,5 +21,9 @@ const Site = () => {
 const container = document.getElementById("root")
 if (container) {
   const root = ReactDOMClient.createRoot(container)
-  root.render(<Site />)
+  root.render(
+    <React.StrictMode>
+      <Site />
+    </React.StrictMode>,
+  )
 }

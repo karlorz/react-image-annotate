@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { action } from "storybook/actions"
+import { fn } from "storybook/test"
 import Annotator from "./"
 
 export default {
@@ -43,7 +43,7 @@ export const VideoAnnotator = () => {
         ],
       },
     },
-    onExit: action("onExit"),
+    onExit: fn(),
     taskDescription: "",
     videoName: "",
     videoTime: 0,

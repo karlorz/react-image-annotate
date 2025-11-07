@@ -1,8 +1,8 @@
 // @flow
 
-import React, { useState } from "react"
+import React from "react"
 
-import { action as actionAddon } from "storybook/actions"
+import { fn } from "storybook/test"
 import dancingManImage from "../ImageCanvas/dancing-man.story.jpg"
 import dabKeyframes from "./dab-keyframes.story.json"
 import Annotator from "./"
@@ -10,9 +10,10 @@ import Annotator from "./"
 const dancingManVideo =
   "https://s3.us-east-1.amazonaws.com/asset.workaround.online/developer-samples/how-to-dab.mp4"
 
+const actionSpy = fn()
 const middlewares = [
   (store) => (next) => (action) => {
-    actionAddon(action.type)(action)
+    actionSpy(action)
     console.log(action)
     return next(action)
   },
@@ -24,7 +25,7 @@ export default {
 
 export const Image = () => (
   <Annotator
-    onExit={actionAddon("onExit")}
+    onExit={fn()}
     middlewares={middlewares}
     labelImages
     enabledTools={["create-keypoints"]}
@@ -86,7 +87,7 @@ export const Image = () => (
 export const Video = () => (
   <Annotator
     onExit={(...props) => {
-      actionAddon("onExit")(...props)
+      fn()(...props)
       window.testPropsSavePlease = props
       console.log(...props)
     }}

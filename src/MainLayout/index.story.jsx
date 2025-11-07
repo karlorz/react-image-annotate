@@ -2,7 +2,10 @@
 
 import React from "react"
 
-import { action } from "storybook/actions"
+import { fn } from "storybook/test"
+
+// Create a single fn instance to capture all actions
+const actionSpy = fn()
 import { testRegions } from "../ImageCanvas/index.story"
 
 import exampleImage from "../ImageCanvas/seves_desk.story.jpg"
@@ -49,7 +52,7 @@ export const Basic = () => (
       enabledTools: ["create-point", "create-polygon", "modify-allowed-area"],
       history: [{ name: "Reset Stuff", state: null, time: moment() }],
     }}
-    dispatch={(a) => action(a.type)(a)}
+    dispatch={(a) => actionSpy(a)}
   />
 )
 
@@ -87,7 +90,7 @@ export const CompletingAPolygon = () => (
       enabledTools: [],
       history: [],
     }}
-    dispatch={(a) => action(a.type)(a)}
+    dispatch={(a) => actionSpy(a)}
   />
 )
 
@@ -140,7 +143,7 @@ export const RegionOverlapClicking = () => (
       enabledTools: [],
       history: [],
     }}
-    dispatch={(a) => !a.type.includes("MOUSE_MOVE") && action(a.type)(a)}
+    dispatch={(a) => !a.type.includes("MOUSE_MOVE") && actionSpy(a)}
   />
 )
 
@@ -190,7 +193,7 @@ export const PointDistances = () => (
       enabledTools: [],
       history: [],
     }}
-    dispatch={(a) => !a.type.includes("MOUSE_MOVE") && action(a.type)(a)}
+    dispatch={(a) => !a.type.includes("MOUSE_MOVE") && actionSpy(a)}
   />
 )
 
@@ -242,7 +245,7 @@ export const PointDistancesRealUnits = () => (
       enabledTools: [],
       history: [],
     }}
-    dispatch={(a) => !a.type.includes("MOUSE_MOVE") && action(a.type)(a)}
+    dispatch={(a) => !a.type.includes("MOUSE_MOVE") && actionSpy(a)}
   />
 )
 

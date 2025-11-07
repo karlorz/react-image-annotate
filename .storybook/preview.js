@@ -6,7 +6,11 @@ import Theme from '../src/Theme'
 
 const preview = {
   decorators: [
-    (Story) => React.createElement(Theme, null, React.createElement(Story))
+    (Story) => React.createElement(
+      React.StrictMode,
+      null,
+      React.createElement(Theme, null, React.createElement(Story))
+    )
   ],
   parameters: {
     actions: { argTypesRegex: '^on[A-Z].*' },

@@ -16,7 +16,7 @@ import RegionSelector from "../RegionSelectorSidebarBox"
 import SettingsDialog from "../SettingsDialog"
 import TagsSidebarBox from "../TagsSidebarBox"
 import TaskDescription from "../TaskDescriptionSidebarBox"
-import Workspace from "react-material-workspace-layout/Workspace"
+import Workspace from "../WorkspaceLayout/Workspace"
 import classnames from "classnames"
 import getActiveImage from "../Annotator/reducers/get-active-image"
 import getHotkeyHelpText from "../utils/get-hotkey-help-text"
@@ -27,7 +27,7 @@ import useEventCallback from "use-event-callback"
 import useImpliedVideoRegions from "./use-implied-video-regions"
 import useKey from "use-key-hook"
 import { useSettings } from "../SettingsProvider"
-import { withHotKeys } from "react-hotkeys"
+// import { withHotKeys } from "react-hotkeys" // TODO: Replace with react-hotkeys-hook
 
 // import Fullscreen from "../Fullscreen"
 
@@ -35,11 +35,13 @@ const emptyArr = []
 const theme = createTheme()
 const useStyles = makeStyles((theme) => styles)
 
-const HotkeyDiv = withHotKeys(({ hotKeys, children, divRef, ...props }) => (
-  <div {...{ ...hotKeys, ...props }} ref={divRef}>
+// Temporary fix: Replace withHotKeys HOC with a simple div
+// The react-hotkeys library is not compatible with React 19
+const HotkeyDiv = ({ hotKeys, children, divRef, handlers, ...props }) => (
+  <div {...props} ref={divRef}>
     {children}
   </div>
-))
+)
 
 const FullScreenContainer = styled("div")(({ theme }) => ({
   width: "100%",
@@ -128,6 +130,7 @@ export const MainLayout = ({
       {...settings}
       showCrosshairs={
         settings.showCrosshairs &&
+        state.selectedTool &&
         !["select", "pan", "zoom"].includes(state.selectedTool)
       }
       key={state.selectedImage}
@@ -141,15 +144,21 @@ export const MainLayout = ({
       regionTagList={state.regionTagList}
       regions={
         state.annotationType === "image"
-          ? activeImage.regions || []
+          ? activeImage && activeImage.regions
+            ? activeImage.regions
+            : []
           : impliedVideoRegions
       }
       realSize={activeImage ? activeImage.realSize : undefined}
       videoPlaying={state.videoPlaying}
-      imageSrc={state.annotationType === "image" ? activeImage.src : null}
+      imageSrc={
+        state.annotationType === "image" && activeImage ? activeImage.src : null
+      }
       videoSrc={state.annotationType === "video" ? state.videoSrc : null}
       pointDistancePrecision={state.pointDistancePrecision}
-      createWithPrimary={state.selectedTool.includes("create")}
+      createWithPrimary={
+        state.selectedTool && state.selectedTool.includes("create")
+      }
       dragWithPrimary={state.selectedTool === "pan"}
       zoomWithPrimary={state.selectedTool === "zoom"}
       showPointDistances={state.showPointDistances}
@@ -305,7 +314,6 @@ export const MainLayout = ({
             divRef={innerContainerRef}
             onMouseDown={refocusOnMouseEvent}
             onMouseOver={refocusOnMouseEvent}
-            allowChanges
             handlers={hotkeyHandlers}
             className={classnames(
               classes.container,
@@ -328,6 +336,7 @@ export const MainLayout = ({
                     : { name: "Pause" },
                 !hideClone &&
                   !nextImageHasRegions &&
+                  activeImage &&
                   activeImage.regions && { name: "Clone" },
                 !hideSettings && { name: "Settings" },
                 !hideFullScreen &&
@@ -406,7 +415,9 @@ export const MainLayout = ({
               ]
                 .filter(Boolean)
                 .filter(
-                  (a) => a.alwaysShowing || state.enabledTools.includes(a.name),
+                  (a) =>
+                    a.alwaysShowing ||
+                    (state.enabledTools && state.enabledTools.includes(a.name)),
                 )}
               rightSidebarItems={rightSidebarItems}
             >
