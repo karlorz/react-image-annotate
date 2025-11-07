@@ -9,6 +9,7 @@ import GitHubButton from "react-github-btn"
 import "./github-markdown.css"
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs"
+import StrictModeTest from "../StrictModeTest"
 
 const theme = createTheme()
 
@@ -141,6 +142,7 @@ const LandingPage = () => {
             </HeroButtons>
           </ContentContainer>
         </Hero>
+        <StrictModeTest />
         <ContentContainer className="markdown-body">
           <Section className="markdown-body">
             <Markdown

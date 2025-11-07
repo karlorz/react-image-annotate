@@ -10,7 +10,7 @@ import Collapse from "@mui/material/Collapse"
 import { grey } from "@mui/material/colors"
 import classnames from "classnames"
 import useEventCallback from "use-event-callback"
-import SidebarBox from "react-material-workspace-layout/SidebarBox"
+import SidebarBox from "../WorkspaceLayout/SidebarBox"
 
 const theme = createTheme()
 const useStyles = makeStyles((theme) => ({

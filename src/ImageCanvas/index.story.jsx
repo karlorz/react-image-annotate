@@ -1,6 +1,6 @@
 import React from "react"
 
-import { action } from "storybook/actions"
+import { fn } from "storybook/test"
 
 import ImageCanvas from "./"
 import exampleMask from "./mouse_mask.story.png"
@@ -88,26 +88,26 @@ export const testRegions = [
 
 const events = {
   // Ignore common mouse movements, they fill the action log
-  onMouseMove: () => null, //action("onMouseMove"),
-  onMouseDown: () => null, //action("onMouseDown"),
-  onMouseUp: () => null, //action("onMouseUp"),
+  onMouseMove: () => null,
+  onMouseDown: () => null,
+  onMouseUp: () => null,
 
-  onChangeRegion: action("onChangeRegion"),
-  onBeginRegionEdit: action("onBeginRegionEdit"),
-  onCloseRegionEdit: action("onCloseRegionEdit"),
+  onChangeRegion: fn(),
+  onBeginRegionEdit: fn(),
+  onCloseRegionEdit: fn(),
 
-  onSelectRegion: action("onSelectRegion"),
+  onSelectRegion: fn(),
 
-  onBeginBoxTransform: action("onBeginBoxTransform"),
+  onBeginBoxTransform: fn(),
 
-  onBeginMovePolygonPoint: action("onBeginMovePolygonPoint"),
-  onAddPolygonPoint: action("onAddPolygonPoint"),
-  onClosePolygon: action("onClosePolygon"),
+  onBeginMovePolygonPoint: fn(),
+  onAddPolygonPoint: fn(),
+  onClosePolygon: fn(),
 
-  onBeginMoveKeypoint: action("onBeginMoveKeypoint"),
+  onBeginMoveKeypoint: fn(),
 
-  onBeginMovePoint: action("onBeginMovePoint"),
-  onDeleteRegion: action("onDeleteRegion"),
+  onBeginMovePoint: fn(),
+  onDeleteRegion: fn(),
 }
 
 export default {

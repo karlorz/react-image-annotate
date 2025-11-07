@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { action } from "storybook/actions"
+import { fn } from "storybook/test"
 import orange from "./orange.story.png"
 import hard1 from "./hard1.story.jpg"
 import hard2 from "./hard2.story.jpg"
@@ -56,7 +56,7 @@ export const Orange2Class = () => (
         },
       ]}
       regionClsList={["bg", "fg"]}
-      onExit={action("onExit")}
+      onExit={fn()}
     />
   </div>
 )
@@ -87,7 +87,7 @@ export const S3CorsDomain = () => (
         },
       ]}
       regionClsList={["bg", "fg"]}
-      onExit={action("onExit")}
+      onExit={fn()}
     />
   </div>
 )
@@ -122,7 +122,7 @@ export const Orange3Class = () => (
         },
       ]}
       regionClsList={["bg", "orange", "hand"]}
-      onExit={action("onExit")}
+      onExit={fn()}
     />
   </div>
 )
@@ -137,7 +137,7 @@ export const Hard18ClassSimpleMode = () => (
         },
       ]}
       regionClsList={["bg", "1", "2", "3", "4", "5", "6", "7", "8"]}
-      onExit={action("onExit")}
+      onExit={fn()}
       autoSegmentationOptions={{ type: "simple" }}
     />
   </div>
@@ -157,7 +157,7 @@ export const Hard18Class = () => (
         },
       ]}
       regionClsList={["1", "2", "3", "4", "5", "6", "7", "8"]}
-      onExit={action("onExit")}
+      onExit={fn()}
     />
   </div>
 )
@@ -176,7 +176,7 @@ export const Hard28Class = () => (
         },
       ]}
       regionClsList={["1", "2", "3", "4", "5", "6", "7", "8"]}
-      onExit={action("onExit")}
+      onExit={fn()}
     />
   </div>
 )
@@ -195,7 +195,7 @@ export const Hard38Class = () => (
         },
       ]}
       regionClsList={["1", "2", "3", "4", "5", "6", "7", "8"]}
-      onExit={action("onExit")}
+      onExit={fn()}
     />
   </div>
 )

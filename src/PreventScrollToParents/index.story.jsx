@@ -2,7 +2,7 @@
 
 import React from "react"
 
-import { action } from "storybook/actions"
+import { fn } from "storybook/test"
 
 import RemoveScrollOnChildren from "./"
 
