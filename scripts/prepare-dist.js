@@ -31,7 +31,7 @@ const distPkg = {
       require: './headless.cjs',
     },
   },
-  files: ['index.js', 'index.mjs', 'index.d.ts', 'headless.js', 'headless.cjs', 'headless.d.ts', '*.map', 'README.md'],
+  files: ['*.js', '*.cjs', '*.mjs', '*.d.ts', '*.map', 'README.md'],
   author: rootPkg.author,
   license: rootPkg.license,
   dependencies: rootPkg.dependencies,
