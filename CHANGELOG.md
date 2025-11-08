@@ -1,3 +1,10 @@
+## [4.0.2](https://github.com/karlorz/react-image-annotate/compare/v4.0.1...v4.0.2) (2025-11-08)
+
+
+### Bug Fixes
+
+* Update package entry points for module and main ([616c2ad](https://github.com/karlorz/react-image-annotate/commit/616c2adaf3d595d63bb5382c6c7ae35cda959852))
+
 ## [4.0.1](https://github.com/karlorz/react-image-annotate/compare/v4.0.0...v4.0.1) (2025-11-08)
 
 
