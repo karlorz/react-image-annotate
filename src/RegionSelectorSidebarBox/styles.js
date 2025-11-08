@@ -5,9 +5,7 @@ export default (theme) => ({
     fontSize: 11,
     fontWeight: "bold",
     color:
-      theme.palette.mode === "dark"
-        ? theme.palette.text.secondary
-        : "#616161",
+      theme.palette.mode === "dark" ? theme.palette.text.secondary : "#616161",
     "& .icon": {
       marginTop: 4,
       width: 16,
@@ -47,9 +45,7 @@ export default (theme) => ({
       backgroundColor:
         theme.palette.mode === "dark" ? theme.palette.grey[800] : blue[50],
       color:
-        theme.palette.mode === "dark"
-          ? theme.palette.text.primary
-          : "#424242",
+        theme.palette.mode === "dark" ? theme.palette.text.primary : "#424242",
     },
   },
   chip: {
@@ -68,9 +64,7 @@ export default (theme) => ({
     },
     "& .text": {
       color:
-        theme.palette.mode === "dark"
-          ? theme.palette.text.primary
-          : "#616161",
+        theme.palette.mode === "dark" ? theme.palette.text.primary : "#616161",
     },
   },
 })
