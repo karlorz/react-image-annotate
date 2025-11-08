@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/karlorz/react-image-annotate/compare/v4.0.0...v4.0.1) (2025-11-08)
+
+
+### Bug Fixes
+
+* Update dist files list and bump package version ([b50399f](https://github.com/karlorz/react-image-annotate/commit/b50399f7880b429bf1f81c0415a346b239c5ef41))
+
 # [4.0.0](https://github.com/karlorz/react-image-annotate/compare/v3.0.0...v4.0.0) (2025-11-08)
 
 
