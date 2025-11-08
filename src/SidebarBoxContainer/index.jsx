@@ -3,16 +3,13 @@
 import React, { useState, memo } from "react"
 import Paper from "@mui/material/Paper"
 import { makeStyles } from "@mui/styles"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
 import ExpandIcon from "@mui/icons-material/ExpandMore"
 import IconButton from "@mui/material/IconButton"
 import Collapse from "@mui/material/Collapse"
-import { grey } from "@mui/material/colors"
 import classnames from "classnames"
 import useEventCallback from "use-event-callback"
 import SidebarBox from "../WorkspaceLayout/SidebarBox"
 
-const theme = createTheme()
 const useStyles = makeStyles((theme) => ({
   container: { margin: 8 },
   header: {
@@ -28,9 +25,15 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     flexGrow: 1,
     paddingLeft: 8,
-    color: grey[800],
+    color:
+      theme.palette.mode === "dark"
+        ? theme.palette.text.primary
+        : theme.palette.grey[800],
     "& span": {
-      color: grey[600],
+      color:
+        theme.palette.mode === "dark"
+          ? theme.palette.text.secondary
+          : theme.palette.grey[600],
       fontSize: 12,
     },
   },
@@ -79,11 +82,9 @@ export const SidebarBoxContainer = ({
   const toggleExpanded = useEventCallback(() => changeExpanded(!expanded))
 
   return (
-    <ThemeProvider theme={theme}>
-      <SidebarBox icon={icon} title={title}>
-        {children}
-      </SidebarBox>
-    </ThemeProvider>
+    <SidebarBox icon={icon} title={title}>
+      {children}
+    </SidebarBox>
   )
 }
 

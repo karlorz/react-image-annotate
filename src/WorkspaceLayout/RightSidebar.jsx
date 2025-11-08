@@ -3,13 +3,9 @@
 
 import React, { useReducer, useEffect, useMemo } from "react"
 import { styled } from "@mui/material/styles"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
 import ButtonBase from "@mui/material/ButtonBase"
 import ExpandIcon from "@mui/icons-material/KeyboardArrowLeft"
 import ContractIcon from "@mui/icons-material/KeyboardArrowRight"
-import { grey } from "@mui/material/colors"
-
-const theme = createTheme()
 
 const Container = styled("div")(({ theme }) => ({
   width: 0,
@@ -17,7 +13,8 @@ const Container = styled("div")(({ theme }) => ({
   flexDirection: "column",
   height: "100%",
   flexShrink: 0,
-  backgroundColor: "#fff",
+  backgroundColor: theme.palette.background.paper,
+  borderLeft: `1px solid ${theme.palette.divider}`,
   position: "relative",
   transition: "width 500ms",
   "&.expanded": {
@@ -35,11 +32,15 @@ const Expander = styled(ButtonBase)(({ theme }) => ({
   borderTopLeftRadius: "50%",
   borderBottomLeftRadius: "50%",
   boxSizing: "border-box",
-  borderTop: `1px solid ${grey[400]}`,
-  borderBottom: `1px solid ${grey[400]}`,
-  borderLeft: `1px solid ${grey[400]}`,
-  boxShadow: "-1px 2px 5px rgba(0,0,0,0.2)",
-  backgroundColor: "#fff",
+  borderTop: `1px solid ${theme.palette.divider}`,
+  borderBottom: `1px solid ${theme.palette.divider}`,
+  borderLeft: `1px solid ${theme.palette.divider}`,
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "-1px 2px 5px rgba(0,0,0,0.5)"
+      : "-1px 2px 5px rgba(0,0,0,0.2)",
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.text.primary,
   position: "absolute",
   top: "calc(50% - 20px)",
   left: -23,
@@ -119,23 +120,18 @@ export const RightSidebar = ({ children, initiallyExpanded, height }) => {
   )
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container className={expanded ? "expanded" : ""} style={containerStyle}>
-        <Slider className={expanded ? "expanded" : ""}>
-          <InnerSliderContent>{children}</InnerSliderContent>
-        </Slider>
-        <Expander
-          onClick={toggleExpanded}
-          className={expanded ? "expanded" : ""}
-        >
-          {expanded ? (
-            <ContractIcon className="icon" />
-          ) : (
-            <ExpandIcon className="icon" />
-          )}
-        </Expander>
-      </Container>
-    </ThemeProvider>
+    <Container className={expanded ? "expanded" : ""} style={containerStyle}>
+      <Slider className={expanded ? "expanded" : ""}>
+        <InnerSliderContent>{children}</InnerSliderContent>
+      </Slider>
+      <Expander onClick={toggleExpanded} className={expanded ? "expanded" : ""}>
+        {expanded ? (
+          <ContractIcon className="icon" />
+        ) : (
+          <ExpandIcon className="icon" />
+        )}
+      </Expander>
+    </Container>
   )
 }
 

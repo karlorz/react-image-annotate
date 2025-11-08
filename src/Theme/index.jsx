@@ -1,36 +1,56 @@
-// @flow
-
 import React from "react"
+import PropTypes from "prop-types"
 import { ThemeProvider, createTheme } from "@mui/material/styles"
-import { makeStyles } from "@mui/styles"
+import CssBaseline from "@mui/material/CssBaseline"
 
-const useStyles = makeStyles((theme) => ({
-  container: {
-    fontFamily: '"Inter", sans-serif',
-  },
-}))
+const FONT_STACK = [
+  '"PingFang TC"',
+  '"PingFang SC"',
+  '-apple-system',
+  '"system-ui"',
+  '"Segoe UI"',
+  'Roboto',
+  '"Helvetica Neue"',
+  'Arial',
+  'sans-serif',
+  '"Apple Color Emoji"',
+  '"Segoe UI Emoji"',
+  '"Segoe UI Symbol"',
+].join(", ")
 
 const theme = createTheme({
   typography: {
-    fontFamily: '"Inter", "Roboto", sans-serif',
+    fontFamily: FONT_STACK,
   },
-  overrides: {
+  components: {
     MuiButton: {
-      root: {
-        textTransform: "none",
+      styleOverrides: {
+        root: {
+          textTransform: "none",
+        },
+      },
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          fontFamily: FONT_STACK,
+        },
       },
     },
   },
 })
 
 export const Theme = ({ children }) => {
-  const classes = useStyles()
   return (
     <ThemeProvider theme={theme}>
-      {/* <div className={classes.container}>{children}</div> */}
+      <CssBaseline />
       <div>{children}</div>
     </ThemeProvider>
   )
+}
+
+Theme.propTypes = {
+  children: PropTypes.node.isRequired,
 }
 
 export default Theme

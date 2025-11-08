@@ -15,6 +15,9 @@ The best image/video annotation tool ever. [Check out the demo here](https://kar
 - Zooming, Scaling, Panning
 - Multiple Images
 - Cursor Crosshair
+- **Headless Architecture** (v3.x) - Build custom UIs with `useAnnotator` hook
+- **Internationalization** (i18n) - Built-in support for EN/ZH/VI languages
+- **Theme Customization** - PingFang font stack with Material-UI v6
 
 ![Screenshot of Annotator](https://user-images.githubusercontent.com/1910070/51199716-83c72080-18c5-11e9-837c-c3a89c8caef4.png)
 
@@ -53,6 +56,63 @@ const App = () => (
 
 export default App;
 
+```
+
+## Headless Architecture (v3.x)
+
+For custom UIs, use the headless `useAnnotator` hook:
+
+```javascript
+import { useAnnotator } from "@karlorz/react-image-annotate/headless";
+
+function MyCustomAnnotator() {
+  const { state, actions, regions, currentImage } = useAnnotator({
+    images: [{ src: '/image.jpg', name: 'Test' }],
+    onExit: (output) => console.log(output)
+  });
+
+  return (
+    <div>
+      <button onClick={() => actions.selectTool('create-box')}>
+        Box Tool
+      </button>
+      <canvas {...actions.getCanvasProps()} />
+      {regions.map(r => (
+        <div key={r.id}>
+          {r.cls}
+          <button onClick={() => actions.deleteRegion(r)}>Delete</button>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+See `examples/headless/` for complete examples with Tailwind CSS, Semi Design, and vanilla React.
+
+## Internationalization (i18n)
+
+Wrap your app with `I18nProvider` for multi-language support:
+
+```javascript
+import { I18nProvider } from "@karlorz/react-image-annotate";
+
+<I18nProvider language="zh"> {/* en, zh, or vi */}
+  <ReactImageAnnotate {...props} />
+</I18nProvider>
+```
+
+Or provide custom translations:
+
+```javascript
+<I18nProvider
+  language="fr"
+  translations={{
+    fr: { 'header.save': 'Enregistrer', ... }
+  }}
+>
+  <ReactImageAnnotate {...props} />
+</I18nProvider>
 ```
 
 To get the proper fonts, make sure to import the Inter UI or Roboto font, the

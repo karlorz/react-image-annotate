@@ -16,6 +16,7 @@ import Select from "react-select"
 import CreatableSelect from "react-select/creatable"
 
 import { asMutable } from "../utils/immutable-helpers"
+import { sanitizeText } from "../utils/sanitize-input"
 
 const theme = createTheme()
 
@@ -73,14 +74,14 @@ export const RegionLabel = ({
                   className="circle"
                   style={{ backgroundColor: region.color }}
                 />
-                {region.cls}
+                {sanitizeText(region.cls)}
               </div>
             )}
             {region.tags && (
               <div className="tags">
                 {region.tags.map((t) => (
                   <div key={t} className="tag">
-                    {t}
+                    {sanitizeText(t)}
                   </div>
                 ))}
               </div>

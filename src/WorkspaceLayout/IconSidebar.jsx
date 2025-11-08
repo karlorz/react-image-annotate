@@ -3,20 +3,18 @@
 
 import React from "react"
 import { styled } from "@mui/material/styles"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
 import IconButton from "@mui/material/IconButton"
 import { iconMapping } from "./icon-mapping"
 import { useIconDictionary } from "./icon-dictionary"
 import Tooltip from "@mui/material/Tooltip"
-
-const theme = createTheme()
 
 const Container = styled("div")(({ theme }) => ({
   width: 50,
   height: "100%",
   display: "flex",
   flexDirection: "column",
-  backgroundColor: "#fff",
+  backgroundColor: theme.palette.background.paper,
+  borderRight: `1px solid ${theme.palette.divider}`,
   flexShrink: 0,
 }))
 
@@ -30,40 +28,37 @@ export const IconSidebar = ({
   const customIconMapping = useIconDictionary()
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container>
-        {items.map((item) => {
-          const NameIcon =
-            customIconMapping[item.name?.toLowerCase()] ||
-            iconMapping[item.name?.toLowerCase()] ||
-            iconMapping["help"]
+    <Container>
+      {items.map((item) => {
+        const NameIcon =
+          customIconMapping[item.name?.toLowerCase()] ||
+          iconMapping[item.name?.toLowerCase()] ||
+          iconMapping["help"]
 
-          const buttonPart = (
-            <IconButton
-              key={item.name}
-              color={
-                item.selected ||
-                selectedTools.includes(item.name?.toLowerCase())
-                  ? "primary"
-                  : "default"
-              }
-              disabled={Boolean(item.disabled)}
-              onClick={item.onClick ? item.onClick : () => onClickItem(item)}
-            >
-              {item.icon || <NameIcon />}
-            </IconButton>
-          )
+        const buttonPart = (
+          <IconButton
+            key={item.name}
+            color={
+              item.selected || selectedTools.includes(item.name?.toLowerCase())
+                ? "primary"
+                : "default"
+            }
+            disabled={Boolean(item.disabled)}
+            onClick={item.onClick ? item.onClick : () => onClickItem(item)}
+          >
+            {item.icon || <NameIcon />}
+          </IconButton>
+        )
 
-          if (!item.helperText) return buttonPart
+        if (!item.helperText) return buttonPart
 
-          return (
-            <Tooltip key={item.name} title={item.helperText} placement="right">
-              {buttonPart}
-            </Tooltip>
-          )
-        })}
-      </Container>
-    </ThemeProvider>
+        return (
+          <Tooltip key={item.name} title={item.helperText} placement="right">
+            {buttonPart}
+          </Tooltip>
+        )
+      })}
+    </Container>
   )
 }
 

@@ -17,3 +17,5 @@ jobs:
         run: npm install --legacy-peer-deps
       - name: Run Prettier Test
         run: npx prettier --check "src/**/*.js"
+      - name: Check i18n Translations
+        run: npm run lint:i18n

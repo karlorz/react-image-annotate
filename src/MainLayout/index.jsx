@@ -1,5 +1,5 @@
 import { FullScreen, useFullScreenHandle } from "react-full-screen"
-import React, { useCallback, useRef } from "react"
+import React, { useCallback, useRef, useMemo } from "react"
 import { makeStyles } from "@mui/styles"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { styled } from "@mui/material/styles"
@@ -27,12 +27,21 @@ import useEventCallback from "use-event-callback"
 import useImpliedVideoRegions from "./use-implied-video-regions"
 import useKey from "use-key-hook"
 import { useSettings } from "../SettingsProvider"
+import { useI18n } from "../I18nProvider"
 // import { withHotKeys } from "react-hotkeys" // TODO: Replace with react-hotkeys-hook
 
 // import Fullscreen from "../Fullscreen"
 
 const emptyArr = []
-const theme = createTheme()
+
+// Create a theme based on mode (light/dark) for Material-UI components
+const createDefaultTheme = (mode = "light") =>
+  createTheme({
+    palette: {
+      mode: mode,
+    },
+  })
+
 const useStyles = makeStyles((theme) => styles)
 
 // Temporary fix: Replace withHotKeys HOC with a simple div
@@ -61,6 +70,7 @@ const FullScreenContainer = styled("div")(({ theme }) => ({
 //   onRegionClassAdded: () => {},
 //   hideHeader?,
 //   hideHeaderText?,
+//   theme?, // NEW: Optional theme - can be 'light', 'dark', or full MUI theme object
 // }
 
 export const MainLayout = ({
@@ -78,10 +88,36 @@ export const MainLayout = ({
   hideSettings = false,
   hideFullScreen = false,
   hideSave = false,
+  translations, // NEW: Optional translations object for i18n
+  theme, // NEW: Optional theme prop for dark/light mode support
 }) => {
   const classes = useStyles()
   const settings = useSettings()
   const fullScreenHandle = useFullScreenHandle()
+
+  // Get translations from context (if provider exists) or use defaults
+  const i18n = useI18n()
+
+  // Allow prop override of context translations
+  const t = translations
+    ? (key, fallback) => translations[key] || fallback || key
+    : i18n.t
+
+  // Determine the Material-UI theme to use
+  const muiTheme = useMemo(() => {
+    if (!theme) {
+      // Backward compatible: no theme prop = light mode
+      return createDefaultTheme("light")
+    }
+
+    if (typeof theme === "string") {
+      // String mode: 'light' or 'dark'
+      return createDefaultTheme(theme)
+    }
+
+    // Full theme object provided by user
+    return theme
+  }, [theme])
 
   const memoizedActionFns = useRef({})
   const action = (type, ...params) => {
@@ -235,7 +271,7 @@ export const MainLayout = ({
   } else if (activeImage) {
     headerLeftSideItems.push(
       <div key="active-image-name" className={classes.headerTitle}>
-        {activeImage.name}
+        {activeImage.name || t("common.noImage", "No Image")}
       </div>,
     )
   }
@@ -252,6 +288,7 @@ export const MainLayout = ({
       <TaskDescription
         key="task-description"
         description={state.taskDescription}
+        title={t("sidebar.taskDescription", "Task Description")}
       />
     ),
     state.regionClsList && (
@@ -260,6 +297,7 @@ export const MainLayout = ({
         selectedCls={state.selectedCls}
         regionClsList={state.regionClsList}
         onSelectCls={action("SELECT_CLASSIFICATION", "cls")}
+        title={t("sidebar.classifications", "Classifications")}
       />
     ),
     state.labelImages && (
@@ -270,6 +308,7 @@ export const MainLayout = ({
         imageTagList={state.imageTagList}
         onChangeImage={action("CHANGE_IMAGE", "delta")}
         expandedByDefault
+        title={t("sidebar.tags", "Image Tags")}
       />
     ),
     <RegionSelector
@@ -278,6 +317,7 @@ export const MainLayout = ({
       onSelectRegion={action("SELECT_REGION", "region")}
       onDeleteRegion={action("DELETE_REGION", "region")}
       onChangeRegion={action("CHANGE_REGION", "region")}
+      title={t("sidebar.regions", "Regions")}
     />,
     state.keyframes && (
       <KeyframesSelector
@@ -288,17 +328,19 @@ export const MainLayout = ({
         currentTime={state.currentVideoTime}
         duration={state.videoDuration}
         keyframes={state.keyframes}
+        title={t("sidebar.keyframes", "Keyframes")}
       />
     ),
     <HistorySidebarBox
       key="history-sidebar"
       history={state.history}
       onRestoreHistory={action("RESTORE_HISTORY")}
+      title={t("sidebar.history", "History")}
     />,
   ].filter(Boolean)
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={muiTheme}>
       <FullScreenContainer>
         <FullScreen
           handle={fullScreenHandle}
@@ -327,23 +369,32 @@ export const MainLayout = ({
               hideHeaderText={hideHeaderText}
               headerLeftSide={headerLeftSideItems}
               headerItems={[
-                !hidePrev && { name: "Prev" },
-                !hideNext && { name: "Next" },
+                !hidePrev && { name: "Prev", label: t("header.prev", "Prev") },
+                !hideNext && { name: "Next", label: t("header.next", "Next") },
                 state.annotationType !== "video"
                   ? null
                   : !state.videoPlaying
-                    ? { name: "Play" }
-                    : { name: "Pause" },
+                    ? { name: "Play", label: t("header.play", "Play") }
+                    : { name: "Pause", label: t("header.pause", "Pause") },
                 !hideClone &&
                   !nextImageHasRegions &&
                   activeImage &&
-                  activeImage.regions && { name: "Clone" },
-                !hideSettings && { name: "Settings" },
+                  activeImage.regions && {
+                    name: "Clone",
+                    label: t("header.clone", "Clone"),
+                  },
+                !hideSettings && {
+                  name: "Settings",
+                  label: t("header.settings", "Settings"),
+                },
                 !hideFullScreen &&
                   (state.fullScreen
-                    ? { name: "Window" }
-                    : { name: "Fullscreen" }),
-                !hideSave && { name: "Save" },
+                    ? { name: "Window", label: t("header.window", "Window") }
+                    : {
+                        name: "Fullscreen",
+                        label: t("header.fullscreen", "Fullscreen"),
+                      }),
+                !hideSave && { name: "Save", label: t("header.save", "Save") },
               ].filter(Boolean)}
               onClickHeaderItem={onClickHeaderItem}
               onClickIconSidebarItem={onClickIconSidebarItem}
@@ -355,62 +406,77 @@ export const MainLayout = ({
               iconSidebarItems={[
                 {
                   name: "select",
-                  helperText: "Select" + getHotkeyHelpText("select_tool"),
+                  helperText:
+                    t("tools.select", "Select") +
+                    getHotkeyHelpText("select_tool"),
                   alwaysShowing: true,
                 },
                 {
                   name: "pan",
                   helperText:
-                    "Drag/Pan (right or middle click)" +
+                    t("tools.pan", "Drag/Pan (right or middle click)") +
                     getHotkeyHelpText("pan_tool"),
                   alwaysShowing: true,
                 },
                 {
                   name: "zoom",
                   helperText:
-                    "Zoom In/Out (scroll)" + getHotkeyHelpText("zoom_tool"),
+                    t("tools.zoom", "Zoom In/Out (scroll)") +
+                    getHotkeyHelpText("zoom_tool"),
                   alwaysShowing: true,
                 },
                 {
                   name: "show-tags",
-                  helperText: "Show / Hide Tags",
+                  helperText: t("tools.showTags", "Show / Hide Tags"),
                   alwaysShowing: true,
                 },
                 {
                   name: "create-point",
-                  helperText: "Add Point" + getHotkeyHelpText("create_point"),
+                  helperText:
+                    t("tools.createPoint", "Add Point") +
+                    getHotkeyHelpText("create_point"),
                 },
                 {
                   name: "create-box",
                   helperText:
-                    "Add Bounding Box" +
+                    t("tools.createBox", "Add Bounding Box") +
                     getHotkeyHelpText("create_bounding_box"),
                 },
                 {
                   name: "create-polygon",
                   helperText:
-                    "Add Polygon" + getHotkeyHelpText("create_polygon"),
+                    t("tools.createPolygon", "Add Polygon") +
+                    getHotkeyHelpText("create_polygon"),
                 },
                 {
                   name: "create-line",
-                  helperText: "Add Line",
+                  helperText: t("tools.createLine", "Add Line"),
                 },
                 {
                   name: "create-expanding-line",
-                  helperText: "Add Expanding Line",
+                  helperText: t(
+                    "tools.createExpandingLine",
+                    "Add Expanding Line",
+                  ),
                 },
                 {
                   name: "create-keypoints",
-                  helperText: "Add Keypoints (Pose)",
+                  helperText: t(
+                    "tools.createKeypoints",
+                    "Add Keypoints (Pose)",
+                  ),
                 },
                 state.fullImageSegmentationMode && {
                   name: "show-mask",
                   alwaysShowing: true,
-                  helperText: "Show / Hide Mask",
+                  helperText: t("tools.showMask", "Show / Hide Mask"),
                 },
                 {
                   name: "modify-allowed-area",
-                  helperText: "Modify Allowed Area",
+                  helperText: t(
+                    "tools.modifyAllowedArea",
+                    "Modify Allowed Area",
+                  ),
                 },
               ]
                 .filter(Boolean)

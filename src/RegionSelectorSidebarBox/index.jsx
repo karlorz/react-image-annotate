@@ -1,8 +1,8 @@
 // @flow
 
-import React, { Fragment, useState, memo } from "react"
+import React, { Fragment, useState, memo, useMemo } from "react"
 import SidebarBoxContainer from "../SidebarBoxContainer"
-import { makeStyles } from "@mui/styles"
+import { makeStyles, useTheme as useMuiTheme } from "@mui/styles"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { styled } from "@mui/material/styles"
 import { grey } from "@mui/material/colors"
@@ -19,11 +19,13 @@ import styles from "./styles"
 import classnames from "classnames"
 import isEqual from "lodash/isEqual"
 
-const theme = createTheme()
-const useStyles = makeStyles((theme) => styles)
+const useStyles = makeStyles((theme) => styles(theme))
 
 const HeaderSep = styled("div")(({ theme }) => ({
-  borderTop: `1px solid ${grey[200]}`,
+  borderTop:
+    theme.palette.mode === "dark"
+      ? `1px solid ${theme.palette.grey[700]}`
+      : `1px solid ${grey[200]}`,
   marginTop: 2,
   marginBottom: 2,
 }))
@@ -170,14 +172,33 @@ export const RegionSelectorSidebarBox = ({
   onDeleteRegion,
   onChangeRegion,
   onSelectRegion,
+  title = "Regions", // NEW: Optional title for i18n support
 }) => {
   const classes = useStyles()
+  const parentTheme = useMuiTheme()
+  const paletteMode = parentTheme?.palette?.mode || "light"
+  const fontFamily = parentTheme?.typography?.fontFamily
+
+  const localTheme = useMemo(
+    () =>
+      createTheme({
+        palette: { mode: paletteMode },
+        ...(fontFamily ? { typography: { fontFamily } } : {}),
+      }),
+    [paletteMode, fontFamily],
+  )
+
+  const RegionIconStyled = styled(RegionIcon)(({ theme }) => ({
+    color:
+      theme.palette.mode === "dark" ? theme.palette.text.secondary : grey[700],
+  }))
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={localTheme}>
       <SidebarBoxContainer
-        title="Regions"
+        title={title}
         subTitle=""
-        icon={<RegionIcon style={{ color: grey[700] }} />}
+        icon={<RegionIconStyled />}
         expandedByDefault
       >
         <div className={classes.container}>
@@ -208,9 +229,12 @@ const mapUsedRegionProperties = (r) => [
   r.highlighted,
 ]
 
-export default memo(RegionSelectorSidebarBox, (prevProps, nextProps) =>
-  isEqual(
-    (prevProps.regions || emptyArr).map(mapUsedRegionProperties),
-    (nextProps.regions || emptyArr).map(mapUsedRegionProperties),
-  ),
+export default memo(
+  RegionSelectorSidebarBox,
+  (prevProps, nextProps) =>
+    prevProps.title === nextProps.title &&
+    isEqual(
+      (prevProps.regions || emptyArr).map(mapUsedRegionProperties),
+      (nextProps.regions || emptyArr).map(mapUsedRegionProperties),
+    ),
 )

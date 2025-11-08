@@ -1,13 +1,11 @@
-import { grey } from "@mui/material/colors"
-
-export default {
+export default (theme) => ({
   container: {
     display: "flex",
     flexGrow: 1,
     flexDirection: "column",
     height: "100%",
     maxHeight: "100vh",
-    backgroundColor: "#fff",
+    backgroundColor: theme.palette.background.default,
     overflow: "hidden",
     "&.fullscreen": {
       position: "absolute",
@@ -20,7 +18,7 @@ export default {
   },
   headerTitle: {
     fontWeight: "bold",
-    color: grey[700],
+    color: theme.palette.text.secondary,
     paddingLeft: 16,
   },
-}
+})
