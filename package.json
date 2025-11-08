@@ -3,19 +3,19 @@
   "version": "4.0.1",
   "type": "module",
   "description": "A powerful React component for image and video annotation with bounding boxes, polygons, points, and more",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./headless": {
       "types": "./dist/headless.d.ts",
-      "import": "./dist/headless.mjs",
-      "require": "./dist/headless.js"
+      "import": "./dist/headless.js",
+      "require": "./dist/headless.cjs"
     }
   },
   "files": [
