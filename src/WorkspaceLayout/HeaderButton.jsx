@@ -4,12 +4,9 @@
 import React from "react"
 import Button from "@mui/material/Button"
 import { styled } from "@mui/material/styles"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { useIconDictionary } from "./icon-dictionary"
 import { iconMapping } from "./icon-mapping"
-import { colors } from "@mui/material"
 
-const theme = createTheme()
 const defaultNameIconMapping = iconMapping
 
 const getIcon = (name, customIconMapping) => {
@@ -35,7 +32,10 @@ const ButtonInnerContent = styled("div")(({ theme }) => ({
 }))
 
 const IconContainer = styled("div")(({ theme }) => ({
-  color: colors.grey[700],
+  color:
+    theme.palette.mode === "dark"
+      ? theme.palette.text.secondary
+      : theme.palette.text.primary,
   "& .MuiSvgIcon-root": {
     width: 18,
     height: 18,
@@ -45,7 +45,10 @@ const IconContainer = styled("div")(({ theme }) => ({
 const Text = styled("div")(({ theme }) => ({
   fontWeight: "bold",
   fontSize: 11,
-  color: colors.grey[800],
+  color:
+    theme.palette.mode === "dark"
+      ? theme.palette.text.primary
+      : theme.palette.text.secondary,
   display: "flex",
   alignItems: "center",
   lineHeight: 1,
@@ -54,34 +57,34 @@ const Text = styled("div")(({ theme }) => ({
 
 export const HeaderButton = ({
   name,
+  label, // NEW: Optional label for i18n support
   icon,
   disabled,
   onClick,
   hideText = false,
 }) => {
   const customIconMapping = useIconDictionary()
+  const displayText = label || name // Use label if provided, otherwise fall back to name
 
   return (
-    <ThemeProvider theme={theme}>
-      <StyledButton onClick={onClick} disabled={disabled}>
-        <ButtonInnerContent>
-          <IconContainer
-            style={
-              hideText
-                ? { height: 32, paddingTop: 8 }
-                : { height: 20, paddingTop: 0 }
-            }
-          >
-            {icon || getIcon(name, customIconMapping)}
-          </IconContainer>
-          {!hideText && (
-            <Text>
-              <div>{name}</div>
-            </Text>
-          )}
-        </ButtonInnerContent>
-      </StyledButton>
-    </ThemeProvider>
+    <StyledButton onClick={onClick} disabled={disabled}>
+      <ButtonInnerContent>
+        <IconContainer
+          style={
+            hideText
+              ? { height: 32, paddingTop: 8 }
+              : { height: 20, paddingTop: 0 }
+          }
+        >
+          {icon || getIcon(name, customIconMapping)}
+        </IconContainer>
+        {!hideText && (
+          <Text>
+            <div>{displayText}</div>
+          </Text>
+        )}
+      </ButtonInnerContent>
+    </StyledButton>
   )
 }
 

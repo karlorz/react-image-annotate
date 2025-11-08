@@ -1,15 +1,12 @@
 import React, { useEffect } from "react"
 import { styled } from "@mui/material/styles"
-import { createTheme, ThemeProvider } from "@mui/material/styles"
 import Box from "@mui/material/Box"
-import * as muiColors from "@mui/material/colors"
 import SidebarBoxContainer from "../SidebarBoxContainer"
 import colors from "../colors"
 import BallotIcon from "@mui/icons-material/Ballot"
 import capitalize from "lodash/capitalize"
 import classnames from "classnames"
 
-const theme = createTheme()
 const LabelContainer = styled("div")(({ theme }) => ({
   display: "flex",
   paddingTop: 4,
@@ -19,7 +16,10 @@ const LabelContainer = styled("div")(({ theme }) => ({
   alignItems: "center",
   cursor: "pointer",
   opacity: 0.7,
-  backgroundColor: "#fff",
+  backgroundColor:
+    theme.palette.mode === "dark"
+      ? theme.palette.grey[800]
+      : theme.palette.background.paper,
   "&:hover": {
     opacity: 1,
   },
@@ -36,10 +36,14 @@ const Circle = styled("div")(({ theme }) => ({
 }))
 const Label = styled("div")(({ theme }) => ({
   fontSize: 11,
+  color: theme.palette.text.primary,
 }))
 const DashSep = styled("div")(({ theme }) => ({
   flexGrow: 1,
-  borderBottom: `2px dotted ${muiColors.grey[300]}`,
+  borderBottom:
+    theme.palette.mode === "dark"
+      ? `2px dotted ${theme.palette.grey[700]}`
+      : `2px dotted ${theme.palette.grey[300]}`,
   marginLeft: 8,
   marginRight: 8,
 }))
@@ -50,13 +54,17 @@ const Number = styled("div")(({ theme }) => ({
   paddingTop: 2,
   paddingBottom: 2,
   fontWeight: "bold",
-  color: muiColors.grey[700],
+  color:
+    theme.palette.mode === "dark"
+      ? theme.palette.text.secondary
+      : theme.palette.grey[700],
 }))
 
 export const ClassSelectionMenu = ({
   selectedCls,
   regionClsList,
   onSelectCls,
+  title = "Classifications", // NEW: Optional title for i18n support
 }) => {
   useEffect(() => {
     const keyMapping = {}
@@ -74,35 +82,38 @@ export const ClassSelectionMenu = ({
     return () => window.removeEventListener("keydown", onKeyDown)
   }, [regionClsList, selectedCls])
 
+  const IconStyled = styled(BallotIcon)(({ theme }) => ({
+    color:
+      theme.palette.mode === "dark"
+        ? theme.palette.text.secondary
+        : theme.palette.grey[700],
+  }))
+
   return (
-    <ThemeProvider theme={theme}>
-      <SidebarBoxContainer
-        title="Classifications"
-        subTitle=""
-        icon={<BallotIcon style={{ color: muiColors.grey[700] }} />}
-        expandedByDefault
-      >
-        {regionClsList.map((label, index) => (
-          <LabelContainer
-            key={`${label}-${index}`}
-            className={classnames({ selected: label === selectedCls })}
-            onClick={() => onSelectCls(label)}
-          >
-            <Circle
-              style={{ backgroundColor: colors[index % colors.length] }}
-            />
-            <Label className={classnames({ selected: label === selectedCls })}>
-              {capitalize(label)}
-            </Label>
-            <DashSep />
-            <Number className={classnames({ selected: label === selectedCls })}>
-              {index < 9 ? `Key [${index + 1}]` : ""}
-            </Number>
-          </LabelContainer>
-        ))}
-        <Box pb={2} />
-      </SidebarBoxContainer>
-    </ThemeProvider>
+    <SidebarBoxContainer
+      title={title}
+      subTitle=""
+      icon={<IconStyled />}
+      expandedByDefault
+    >
+      {regionClsList.map((label, index) => (
+        <LabelContainer
+          key={`${label}-${index}`}
+          className={classnames({ selected: label === selectedCls })}
+          onClick={() => onSelectCls(label)}
+        >
+          <Circle style={{ backgroundColor: colors[index % colors.length] }} />
+          <Label className={classnames({ selected: label === selectedCls })}>
+            {capitalize(label)}
+          </Label>
+          <DashSep />
+          <Number className={classnames({ selected: label === selectedCls })}>
+            {index < 9 ? `Key [${index + 1}]` : ""}
+          </Number>
+        </LabelContainer>
+      ))}
+      <Box pb={2} />
+    </SidebarBoxContainer>
   )
 }
 

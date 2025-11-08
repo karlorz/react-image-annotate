@@ -1,6 +1,9 @@
 // React 19 compatibility shim - must be imported before React
 import '../src/utils/react19-compat.js'
 
+// Semi Design CSS
+import '@douyinfe/semi-ui/dist/css/semi.min.css'
+
 import React from 'react'
 import Theme from '../src/Theme'
 

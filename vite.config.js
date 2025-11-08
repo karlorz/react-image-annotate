@@ -70,10 +70,12 @@ export default defineConfig(({ command, mode }) => {
     ...commonConfig,
     build: {
       lib: {
-        entry: resolve(__dirname, 'src/lib.js'),
+        entry: {
+          index: resolve(__dirname, 'src/lib.js'),
+          headless: resolve(__dirname, 'src/headless.js'),
+        },
         name: 'ReactImageAnnotate',
         formats: ['es', 'cjs'],
-        fileName: (format) => `index.${format === 'es' ? 'mjs' : 'js'}`,
       },
       rollupOptions: {
         external: [

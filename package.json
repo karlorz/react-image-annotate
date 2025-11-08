@@ -11,6 +11,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./headless": {
+      "types": "./dist/headless.d.ts",
+      "import": "./dist/headless.mjs",
+      "require": "./dist/headless.js"
     }
   },
   "files": [
@@ -18,8 +23,10 @@
     "README.md"
   ],
   "author": "karlorz",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "dependencies": {
+    "@douyinfe/semi-icons": "^2.87.1",
+    "@douyinfe/semi-ui": "^2.87.1",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
@@ -87,6 +94,7 @@
     "format": "prettier --write \"src/**/*.{js,jsx,json,md}\"",
     "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "prettier:test": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
+    "lint:i18n": "node scripts/i18n-helper.js",
     "postinstall": "patch-package"
   },
   "browserslist": [
@@ -104,6 +112,7 @@
     "@babel/preset-typescript": "^7.28.5",
     "@eslint/js": "^9.39.1",
     "@rollup/plugin-babel": "^6.1.0",
+    "@semantic-release/changelog": "^6.0.3",
     "@storybook/addon-docs": "^10.0.4",
     "@storybook/addon-links": "^10.0.4",
     "@storybook/react-vite": "^10.0.4",

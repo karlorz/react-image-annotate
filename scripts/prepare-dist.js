@@ -25,8 +25,13 @@ const distPkg = {
       import: './index.mjs', // Changed from ./dist/index.mjs
       require: './index.js', // Changed from ./dist/index.js
     },
+    './headless': {
+      types: './headless.d.ts',
+      import: './headless.js',
+      require: './headless.cjs',
+    },
   },
-  files: ['index.js', 'index.mjs', 'index.d.ts', '*.map', 'README.md'],
+  files: ['index.js', 'index.mjs', 'index.d.ts', 'headless.js', 'headless.cjs', 'headless.d.ts', '*.map', 'README.md'],
   author: rootPkg.author,
   license: rootPkg.license,
   dependencies: rootPkg.dependencies,

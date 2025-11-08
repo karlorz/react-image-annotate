@@ -1,8 +1,8 @@
 // @flow
 
-import React, { Fragment, useState, memo } from "react"
+import React, { Fragment, useState, memo, useMemo } from "react"
 import SidebarBoxContainer from "../SidebarBoxContainer"
-import { makeStyles } from "@mui/styles"
+import { useTheme as useMuiTheme } from "@mui/styles"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { styled } from "@mui/material/styles"
 import { grey } from "@mui/material/colors"
@@ -15,26 +15,89 @@ import LockIcon from "@mui/icons-material/Lock"
 import UnlockIcon from "@mui/icons-material/LockOpen"
 import VisibleIcon from "@mui/icons-material/Visibility"
 import VisibleOffIcon from "@mui/icons-material/VisibilityOff"
-import styles from "./styles"
-import classnames from "classnames"
 import isEqual from "lodash/isEqual"
 
-const theme = createTheme()
-const useStyles = makeStyles((theme) => styles)
+// Styled components replacing makeStyles
+const Container = styled("div")(({ theme }) => ({
+  fontSize: 11,
+  fontWeight: "bold",
+  color:
+    theme.palette.mode === "dark" ? theme.palette.text.secondary : "#616161",
+  "& .icon": {
+    marginTop: 4,
+    width: 16,
+    height: 16,
+    color:
+      theme.palette.mode === "dark" ? theme.palette.text.secondary : grey[700],
+  },
+  "& .icon2": {
+    opacity: 0.5,
+    width: 16,
+    height: 16,
+    transition: "200ms opacity",
+    color:
+      theme.palette.mode === "dark" ? theme.palette.text.secondary : grey[700],
+    "&:hover": {
+      cursor: "pointer",
+      opacity: 1,
+    },
+  },
+}))
+
+const StyledRow = styled("div")(({ theme }) => ({
+  padding: 4,
+  cursor: "pointer",
+  "&.header:hover": {
+    backgroundColor:
+      theme.palette.mode === "dark" ? theme.palette.grey[900] : "#fff",
+  },
+  "&.highlighted": {
+    backgroundColor:
+      theme.palette.mode === "dark" ? theme.palette.primary.dark : "#bbdefb",
+  },
+  "&:hover": {
+    backgroundColor:
+      theme.palette.mode === "dark" ? theme.palette.grey[800] : "#e3f2fd",
+    color:
+      theme.palette.mode === "dark" ? theme.palette.text.primary : "#424242",
+  },
+}))
+
+const ChipContainer = styled("span")({
+  display: "flex",
+  flexDirection: "row",
+  padding: 2,
+  borderRadius: 2,
+  paddingLeft: 4,
+  paddingRight: 4,
+  alignItems: "center",
+  "& .color": {
+    borderRadius: 5,
+    width: 10,
+    height: 10,
+    marginRight: 4,
+  },
+})
+
+const ChipText = styled("div")(({ theme }) => ({
+  color: theme.palette.mode === "dark" ? theme.palette.text.primary : "#616161",
+}))
 
 const HeaderSep = styled("div")(({ theme }) => ({
-  borderTop: `1px solid ${grey[200]}`,
+  borderTop:
+    theme.palette.mode === "dark"
+      ? `1px solid ${theme.palette.grey[700]}`
+      : `1px solid ${grey[200]}`,
   marginTop: 2,
   marginBottom: 2,
 }))
 
 const Chip = ({ color, text }) => {
-  const classes = useStyles()
   return (
-    <span className={classes.chip}>
+    <ChipContainer>
       <div className="color" style={{ backgroundColor: color }} />
-      <div className="text">{text}</div>
-    </span>
+      <ChipText>{text}</ChipText>
+    </ChipContainer>
   )
 }
 
@@ -50,14 +113,17 @@ const RowLayout = ({
   visible,
   onClick,
 }) => {
-  const classes = useStyles()
   const [mouseOver, changeMouseOver] = useState(false)
+  const classNames = [header && "header", highlighted && "highlighted"]
+    .filter(Boolean)
+    .join(" ")
+
   return (
-    <div
+    <StyledRow
       onClick={onClick}
       onMouseEnter={() => changeMouseOver(true)}
       onMouseLeave={() => changeMouseOver(false)}
-      className={classnames(classes.row, { header, highlighted })}
+      className={classNames}
     >
       <Grid container alignItems="center">
         <Grid item xs={2}>
@@ -79,7 +145,7 @@ const RowLayout = ({
           {visible}
         </Grid>
       </Grid>
-    </div>
+    </StyledRow>
   )
 }
 
@@ -170,17 +236,35 @@ export const RegionSelectorSidebarBox = ({
   onDeleteRegion,
   onChangeRegion,
   onSelectRegion,
+  title = "Regions", // NEW: Optional title for i18n support
 }) => {
-  const classes = useStyles()
+  const parentTheme = useMuiTheme()
+  const paletteMode = parentTheme?.palette?.mode || "light"
+  const fontFamily = parentTheme?.typography?.fontFamily
+
+  const localTheme = useMemo(
+    () =>
+      createTheme({
+        palette: { mode: paletteMode },
+        ...(fontFamily ? { typography: { fontFamily } } : {}),
+      }),
+    [paletteMode, fontFamily],
+  )
+
+  const RegionIconStyled = styled(RegionIcon)(({ theme }) => ({
+    color:
+      theme.palette.mode === "dark" ? theme.palette.text.secondary : grey[700],
+  }))
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={localTheme}>
       <SidebarBoxContainer
-        title="Regions"
+        title={title}
         subTitle=""
-        icon={<RegionIcon style={{ color: grey[700] }} />}
+        icon={<RegionIconStyled />}
         expandedByDefault
       >
-        <div className={classes.container}>
+        <Container>
           <MemoRowHeader />
           <HeaderSep />
           {regions.map((r, i) => (
@@ -194,7 +278,7 @@ export const RegionSelectorSidebarBox = ({
               onChangeRegion={onChangeRegion}
             />
           ))}
-        </div>
+        </Container>
       </SidebarBoxContainer>
     </ThemeProvider>
   )
@@ -208,9 +292,12 @@ const mapUsedRegionProperties = (r) => [
   r.highlighted,
 ]
 
-export default memo(RegionSelectorSidebarBox, (prevProps, nextProps) =>
-  isEqual(
-    (prevProps.regions || emptyArr).map(mapUsedRegionProperties),
-    (nextProps.regions || emptyArr).map(mapUsedRegionProperties),
-  ),
+export default memo(
+  RegionSelectorSidebarBox,
+  (prevProps, nextProps) =>
+    prevProps.title === nextProps.title &&
+    isEqual(
+      (prevProps.regions || emptyArr).map(mapUsedRegionProperties),
+      (nextProps.regions || emptyArr).map(mapUsedRegionProperties),
+    ),
 )

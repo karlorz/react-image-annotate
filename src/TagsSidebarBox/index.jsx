@@ -3,7 +3,7 @@
 import React, { useMemo, memo } from "react"
 import SidebarBoxContainer from "../SidebarBoxContainer"
 import StyleIcon from "@mui/icons-material/Style"
-import { grey } from "@mui/material/colors"
+import { styled } from "@mui/material/styles"
 import Select from "react-select"
 import useEventCallback from "use-event-callback"
 import { asMutable } from "../utils/immutable-helpers"
@@ -19,11 +19,19 @@ import { asMutable } from "../utils/immutable-helpers"
 const emptyArr = []
 const noop = () => null
 
+const IconStyled = styled(StyleIcon)(({ theme }) => ({
+  color:
+    theme.palette.mode === "dark"
+      ? theme.palette.text.secondary
+      : theme.palette.grey[700],
+}))
+
 export const TagsSidebarBox = ({
   currentImage,
   imageClsList = emptyArr,
   imageTagList = emptyArr,
   onChangeImage = noop,
+  title = "Image Tags", // NEW: Optional title for i18n support
 }) => {
   const { tags = [], cls = null } = currentImage || {}
   const onChangeClassification = useEventCallback((o) =>
@@ -53,10 +61,10 @@ export const TagsSidebarBox = ({
 
   return (
     <SidebarBoxContainer
-      title="Image Tags"
+      title={title}
       expandedByDefault
       noScroll
-      icon={<StyleIcon style={{ color: grey[700] }} />}
+      icon={<IconStyled />}
     >
       {imageClsList.length > 0 && (
         <div style={{ padding: 8 }}>
@@ -86,6 +94,7 @@ export const TagsSidebarBox = ({
 export default memo(
   TagsSidebarBox,
   (prevProps, nextProps) =>
+    prevProps.title === nextProps.title &&
     prevProps.currentImage.cls === nextProps.currentImage.cls &&
     prevProps.currentImage.tags === nextProps.currentImage.tags &&
     prevProps.imageClsList === nextProps.imageClsList &&

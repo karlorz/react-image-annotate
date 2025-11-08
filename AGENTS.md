@@ -40,6 +40,38 @@ The modern `@karlorz/image-annotate` (published at npm) represents the migration
 3. **Use deepwiki** for understanding the modern `@karlorz/image-annotate` architecture
 4. **Keep Material-UI v5 working** while adding Tailwind CSS support for new components
 
+### Headless + Theme + i18n Integration (v3.x Architecture)
+
+#### Core Components
+1. **`useAnnotator` Hook** (`src/hooks/useAnnotator.js` + `src/hooks/types.ts`)
+   - Headless entry: `src/headless.js` exports as `@karlorz/react-image-annotate/headless`
+   - Extracts ALL business logic (reducers, actions, state management)
+   - Returns: `{ state, actions, regions, currentImage, dispatch, getOutput }`
+   - Drives custom UIs without duplicating logic
+
+2. **Theme System** (`src/Theme/index.jsx`)
+   - PingFang-first font stack: `"PingFang TC", "PingFang SC"` + system fonts
+   - Material-UI v6 with `CssBaseline` overrides
+   - Maintains typography consistency in light/dark modes
+
+3. **i18n Provider** (`src/I18nProvider/index.jsx`)
+   - Built-in: English (en), Chinese (zh), Vietnamese (vi)
+   - Hook: `useI18n()` - safe without provider (returns English defaults)
+   - Translates: headers, tools, sidebars, settings automatically
+
+#### Integration Rules
+1. **Business logic lives in `useAnnotator`** - Never duplicate reducer logic in custom UIs
+2. **Exports & Types** - Update BOTH `src/headless.js` exports and `src/hooks/types.ts` definitions
+3. **Theme guidance** - Preserve PingFang font stack, use CssBaseline for typography
+4. **i18n support** - Wrap with `I18nProvider`, route copy through `useI18n().t()`
+5. **Storybook parity** - Reflect changes in `src/hooks/useAnnotator.stories.jsx` + `examples/headless/`
+
+#### Outstanding Gaps
+- Settings dialog not yet rebuilt for headless demos
+- `WithWorkspaceLayout` story needs implementation
+- `actions.getCanvasProps()` method needs implementation
+- Video regions need computed implied regions from keyframes
+
 ### Material-UI + Tailwind CSS Compatibility
 
 To maintain both styling systems during migration:
@@ -143,6 +175,7 @@ Focus on migrating in this order:
 - `npm run lint:fix` - Auto-fix ESLint issues (alternative: `bun run lint:fix`)
 - `npm run prettier` - Format source files (alternative: `bun run prettier`)
 - `npm run format` - Format all files including JSON/Markdown (alternative: `bun run format`)
+- `npm run lint:i18n` - Check translation completeness across all languages (alternative: `bun run lint:i18n`)
 
 ### Deployment
 - `npm run build:gh-pages` - Build demo site for GitHub Pages
@@ -270,6 +303,70 @@ Tests are configured with Vitest. Run with `npm test` or `bun test`.
 | Double rendering in dev | StrictMode intentional behavior | Ensure effects have proper cleanup |
 | Storybook action errors | Wrong import path in v10 | Use `storybook/test` not `@storybook/test` |
 | "action is not defined" | Deprecated addon-actions | Use `fn()` from `storybook/test` |
+
+## Chrome DevTools MCP Integration
+
+### Usage Best Practices for Agents
+1. **Always specify URL first**: `"Navigate to http://localhost:9090 (Storybook)"`
+2. **Chain actions**: `"Load the app, click login, fill form, submit, check console errors"`
+3. **Iterative debugging**: `"List failed network requests"` → `"Show details for request ID 42"`
+4. **Performance tracing**: Wrap workflows in `performance_start_trace` → `performance_stop_trace`
+5. **Combine with code gen**: `"Based on CORS error in console, fix my fetch() call"`
+6. **Security**: Use `--isolated=true` to avoid persisting user data across sessions
+
+### Tool Categories & Web Dev Use Cases
+
+| Category | Tools | Use Cases |
+|----------|-------|-----------|
+| **Input** | `click`, `fill_form`, `hover`, `drag` | Automate UI testing (form validation, button clicks) |
+| **Navigation** | `navigate_page`, `wait_for`, `new_page` | Load dev servers, handle async page transitions (SPAs) |
+| **Debugging** | `list_console_messages`, `evaluate_script`, `take_screenshot` | Catch React errors, extract DOM, verify layouts visually |
+| **Network** | `list_network_requests`, `get_network_request` | Debug API calls, CORS issues, 404s in fetch/axios |
+| **Performance** | `performance_start_trace`, `performance_analyze_insight` | Profile React renders, identify JS bottlenecks, optimize load times |
+| **Emulation** | `emulate`, `resize_page` | Test responsive design (375px mobile), throttle network (3G sim) |
+
+### Example Workflow: Storybook Component Testing
+```
+Agent Prompt:
+"Navigate to http://localhost:9090/?path=/story/annotator--basic-usage,
+take a screenshot, click the 'Add Box' button,
+check console for errors, and list any failed network requests."
+
+Expected Actions:
+1. navigate_page(url="http://localhost:9090/?path=...")
+2. take_screenshot() → Displays initial component state
+3. take_snapshot() → Gets accessibility tree (finds button UID)
+4. click(uid="button-add-box")
+5. list_console_messages(types=["error"]) → Returns empty or CORS issues
+6. list_network_requests(resourceTypes=["fetch", "xhr"]) → Checks API failures
+```
+
+### Quick Test Commands
+```bash
+# Basic browser control test
+"Navigate to https://demo.realworld.io and take a screenshot"
+
+# Console debugging
+"Load https://demo.realworld.io, check console for CORS errors"
+
+# Form automation
+"On https://demo.realworld.io, click Sign In, fill test@example.com / testpass123, submit"
+
+# Performance analysis
+"Navigate to https://developers.chrome.com, trace performance, analyze insights"
+```
+
+### Integration with This Project
+- **Test Storybook stories**: Automate visual regression tests for `useAnnotator` components
+- **Debug annotation canvas**: Inspect `<canvas>` element rendering, check event listeners
+- **Validate i18n**: Switch languages via settings dialog, verify translated text in DOM
+- **Performance profiling**: Measure React 19 render times for headless hook examples
+- **Network mocking**: Test API failures in ImageCanvas, verify error boundaries display
+
+### Requirements
+- **Node.js**: v20.19+ (same as project requirement)
+- **Chrome/Chromium**: Auto-launched by MCP server on first use
+- **No conflicts**: Works alongside existing Vite dev server (port 9090 for Storybook)
 
 ## Recent Updates
 

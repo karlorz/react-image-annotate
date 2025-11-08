@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useState } from "react"
 
-const defaultSettings = {}
+const defaultSettings = {
+  showCrosshairs: true,
+  showHighlightBox: true,
+  wasdMode: false,
+  videoPlaybackSpeed: "1x",
+}
 
 export const SettingsContext = createContext(defaultSettings)
 
@@ -25,7 +30,10 @@ const pullSettingsFromLocalStorage = () => {
 export const useSettings = () => useContext(SettingsContext)
 
 export const SettingsProvider = ({ children }) => {
-  const [state, changeState] = useState(() => pullSettingsFromLocalStorage())
+  const [state, changeState] = useState(() => ({
+    ...defaultSettings,
+    ...pullSettingsFromLocalStorage(),
+  }))
   const changeSetting = (setting, value) => {
     changeState({ ...state, [setting]: value })
     window.localStorage.setItem(`settings_${setting}`, JSON.stringify(value))

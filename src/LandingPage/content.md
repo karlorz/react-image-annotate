@@ -13,13 +13,13 @@
 ## Installation
 
 ```bash
-npm install react-image-annotate
+npm install @karlorz/react-image-annotate
 ```
 
 ## Basic Example
 
 ```javascript
-import ReactImageAnnotate from "react-image-annotate"
+import ReactImageAnnotate from "@karlorz/react-image-annotate"
 
 const App = () => (
   <ReactImageAnnotate
