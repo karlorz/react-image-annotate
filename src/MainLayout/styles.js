@@ -7,7 +7,7 @@ export default (theme) => ({
     maxHeight: "100vh",
     backgroundColor: theme.palette.background.default,
     overflow: "hidden",
-    "&.fullscreen": {
+    "&.Fullscreen": {
       position: "absolute",
       zIndex: 99999,
       left: 0,

@@ -18,8 +18,7 @@ import Crosshairs from "../Crosshairs"
 //   Keypoints,
 //   KeypointsDefinition,
 // } from "./region-tools.js"
-import { makeStyles } from "@mui/styles"
-import styles from "./styles"
+import { styled } from "@mui/material/styles"
 import PreventScrollToParents from "../PreventScrollToParents"
 import useWindowSize from "../hooks/use-window-size.js"
 import useMouse from "./use-mouse"
@@ -36,7 +35,37 @@ import useEventCallback from "use-event-callback"
 import RegionShapes from "../RegionShapes"
 import useWasdMode from "./use-wasd-mode"
 
-const useStyles = makeStyles((theme) => styles)
+// Styled components replacing makeStyles
+const Canvas = styled("canvas")({
+  width: "100%",
+  height: "100%",
+  position: "relative",
+  zIndex: 1,
+})
+
+const ZoomIndicator = styled("div")({
+  position: "absolute",
+  bottom: 16,
+  right: 0,
+  backgroundColor: "rgba(0,0,0,0.4)",
+  color: "#fff",
+  opacity: 0.5,
+  fontWeight: "bolder",
+  fontSize: 14,
+  padding: 4,
+})
+
+const FixedRegionLabel = styled("div")({
+  position: "absolute",
+  zIndex: 10,
+  top: 10,
+  left: 10,
+  opacity: 0.5,
+  transition: "opacity 500ms",
+  "&:hover": {
+    opacity: 1,
+  },
+})
 
 // type Props = {
 //   regions: Array<Region>,
@@ -141,8 +170,6 @@ export const ImageCanvas = ({
   keypointDefinitions,
   allowComments,
 }) => {
-  const classes = useStyles()
-
   const canvasEl = useRef(null)
   const layoutParams = useRef({})
   const [dragging, changeDragging] = useRafState(false)
@@ -394,7 +421,7 @@ export const ImageCanvas = ({
         </PreventScrollToParents>
       )}
       {!showTags && highlightedRegion && (
-        <div key="topLeftTag" className={classes.fixedRegionLabel}>
+        <FixedRegionLabel key="topLeftTag">
           <RegionLabel
             disableClose
             allowedClasses={regionClsList}
@@ -406,7 +433,7 @@ export const ImageCanvas = ({
             imageSrc={imageSrc}
             allowComments={allowComments}
           />
-        </div>
+        </FixedRegionLabel>
       )}
 
       {zoomWithPrimary && zoomBox !== null && (
@@ -448,11 +475,7 @@ export const ImageCanvas = ({
               regions={regions}
             />
           )}
-          <canvas
-            style={{ opacity: 0.25 }}
-            className={classes.canvas}
-            ref={canvasEl}
-          />
+          <Canvas style={{ opacity: 0.25 }} ref={canvasEl} />
           <RegionShapes
             mat={mat}
             keypointDefinitions={keypointDefinitions}
@@ -474,9 +497,7 @@ export const ImageCanvas = ({
           />
         </>
       </PreventScrollToParents>
-      <div className={classes.zoomIndicator}>
-        {((1 / mat.a) * 100).toFixed(0)}%
-      </div>
+      <ZoomIndicator>{((1 / mat.a) * 100).toFixed(0)}%</ZoomIndicator>
     </div>
   )
 }

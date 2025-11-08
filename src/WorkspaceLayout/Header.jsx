@@ -16,6 +16,12 @@ const Container = styled("div")(({ theme }) => ({
   boxSizing: "border-box",
 }))
 
+const LeftSideContainer = styled("div")({
+  flexGrow: 1,
+  display: "flex",
+  alignItems: "center",
+})
+
 export const Header = ({
   leftSideContent = null,
   hideHeaderText = false,
@@ -24,7 +30,7 @@ export const Header = ({
 }) => {
   return (
     <Container>
-      <Box flexGrow={1}>{leftSideContent}</Box>
+      <LeftSideContainer>{leftSideContent}</LeftSideContainer>
       {items.map((item) => (
         <HeaderButton
           key={item.name}

@@ -2,11 +2,9 @@
 
 import React, { useRef, memo } from "react"
 import Paper from "@mui/material/Paper"
-import { makeStyles } from "@mui/styles"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
-import styles from "./styles"
-import classnames from "classnames"
-// import type { Region } from "../ImageCanvas/region-tools.js"
+import { styled } from "@mui/material/styles"
+import { grey } from "@mui/material/colors"
 import IconButton from "@mui/material/IconButton"
 import Button from "@mui/material/Button"
 import TrashIcon from "@mui/icons-material/Delete"
@@ -20,7 +18,54 @@ import { sanitizeText } from "../utils/sanitize-input"
 
 const theme = createTheme()
 
-const useStyles = makeStyles((theme) => styles)
+// Styled components replacing makeStyles
+const RegionInfo = styled(Paper)({
+  fontSize: 12,
+  cursor: "default",
+  transition: "opacity 200ms",
+  opacity: 0.5,
+  "&:hover": {
+    opacity: 0.9,
+    cursor: "pointer",
+  },
+  "&.highlighted": {
+    opacity: 0.9,
+    "&:hover": {
+      opacity: 1,
+    },
+  },
+  fontWeight: 600,
+  color: grey[900],
+  padding: 8,
+  "& .name": {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    "& .circle": {
+      marginRight: 4,
+      boxShadow: "0px 0px 2px rgba(0,0,0,0.4)",
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+    },
+  },
+  "& .tags": {
+    "& .tag": {
+      color: grey[700],
+      display: "inline-block",
+      margin: 1,
+      fontSize: 10,
+      textDecoration: "underline",
+    },
+  },
+})
+
+const CommentBox = styled(TextField)({
+  "& .MuiInputBase-root": {
+    fontWeight: 400,
+    fontSize: 13,
+  },
+})
 
 // type Props = {
 //   region: Region,
@@ -49,7 +94,6 @@ export const RegionLabel = ({
   onRegionClassAdded,
   allowComments,
 }) => {
-  const classes = useStyles()
   const commentInputRef = useRef(null)
   const onCommentInputClick = (_) => {
     // The TextField wraps the <input> tag with two divs
@@ -60,11 +104,9 @@ export const RegionLabel = ({
 
   return (
     <ThemeProvider theme={theme}>
-      <Paper
+      <RegionInfo
         onClick={() => (!editing ? onOpen(region) : null)}
-        className={classnames(classes.regionInfo, {
-          highlighted: region.highlighted,
-        })}
+        className={region.highlighted ? "highlighted" : ""}
       >
         {!editing ? (
           <div>
@@ -160,10 +202,7 @@ export const RegionLabel = ({
               </div>
             )}
             {allowComments && (
-              <TextField
-                InputProps={{
-                  className: classes.commentBox,
-                }}
+              <CommentBox
                 fullWidth
                 multiline
                 rows={3}
@@ -190,7 +229,7 @@ export const RegionLabel = ({
             )}
           </div>
         )}
-      </Paper>
+      </RegionInfo>
     </ThemeProvider>
   )
 }

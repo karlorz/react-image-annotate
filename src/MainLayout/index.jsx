@@ -1,6 +1,5 @@
 import { FullScreen, useFullScreenHandle } from "react-full-screen"
 import React, { useCallback, useRef, useMemo } from "react"
-import { makeStyles } from "@mui/styles"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
 import { styled } from "@mui/material/styles"
 
@@ -17,11 +16,9 @@ import SettingsDialog from "../SettingsDialog"
 import TagsSidebarBox from "../TagsSidebarBox"
 import TaskDescription from "../TaskDescriptionSidebarBox"
 import Workspace from "../WorkspaceLayout/Workspace"
-import classnames from "classnames"
 import getActiveImage from "../Annotator/reducers/get-active-image"
 import getHotkeyHelpText from "../utils/get-hotkey-help-text"
 import iconDictionary from "./icon-dictionary"
-import styles from "./styles"
 import { useDispatchHotkeyHandlers } from "../ShortcutsManager"
 import useEventCallback from "use-event-callback"
 import useImpliedVideoRegions from "./use-implied-video-regions"
@@ -42,23 +39,40 @@ const createDefaultTheme = (mode = "light") =>
     },
   })
 
-const useStyles = makeStyles((theme) => styles)
-
 // Temporary fix: Replace withHotKeys HOC with a simple div
 // The react-hotkeys library is not compatible with React 19
-const HotkeyDiv = ({ hotKeys, children, divRef, handlers, ...props }) => (
-  <div {...props} ref={divRef}>
-    {children}
-  </div>
-)
+const HotkeyDiv = styled("div")(({ theme, fullscreen }) => ({
+  display: "flex",
+  flexGrow: 1,
+  flexDirection: "column",
+  height: "100%",
+  maxHeight: "100vh",
+  backgroundColor: theme.palette.background.default,
+  overflow: "hidden",
+  ...(fullscreen && {
+    position: "absolute",
+    zIndex: 99999,
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+  }),
+}))
 
 const FullScreenContainer = styled("div")(({ theme }) => ({
   width: "100%",
-  height: "100%",
-  "& .fullscreen": {
+  height: "100vh",
+  "& .fullscreen-enabled": {
     width: "100%",
     height: "100%",
   },
+}))
+
+// Styled component for header title using the same styles from styles.js
+const HeaderTitle = styled("div")(({ theme }) => ({
+  fontWeight: "bold",
+  color: theme.palette.text.secondary,
+  paddingLeft: 16,
 }))
 
 // type Props = {
@@ -73,7 +87,8 @@ const FullScreenContainer = styled("div")(({ theme }) => ({
 //   theme?, // NEW: Optional theme - can be 'light', 'dark', or full MUI theme object
 // }
 
-export const MainLayout = ({
+// Internal component that uses the theme from context
+const MainLayoutInner = ({
   state,
   dispatch,
   alwaysShowNextButton = false,
@@ -88,10 +103,9 @@ export const MainLayout = ({
   hideSettings = false,
   hideFullScreen = false,
   hideSave = false,
-  translations, // NEW: Optional translations object for i18n
-  theme, // NEW: Optional theme prop for dark/light mode support
+  translations,
+  theme, // Theme prop passed from outer component
 }) => {
-  const classes = useStyles()
   const settings = useSettings()
   const fullScreenHandle = useFullScreenHandle()
 
@@ -102,22 +116,6 @@ export const MainLayout = ({
   const t = translations
     ? (key, fallback) => translations[key] || fallback || key
     : i18n.t
-
-  // Determine the Material-UI theme to use
-  const muiTheme = useMemo(() => {
-    if (!theme) {
-      // Backward compatible: no theme prop = light mode
-      return createDefaultTheme("light")
-    }
-
-    if (typeof theme === "string") {
-      // String mode: 'light' or 'dark'
-      return createDefaultTheme(theme)
-    }
-
-    // Full theme object provided by user
-    return theme
-  }, [theme])
 
   const memoizedActionFns = useRef({})
   const action = (type, ...params) => {
@@ -270,9 +268,9 @@ export const MainLayout = ({
     )
   } else if (activeImage) {
     headerLeftSideItems.push(
-      <div key="active-image-name" className={classes.headerTitle}>
+      <HeaderTitle key="active-image-name">
         {activeImage.name || t("common.noImage", "No Image")}
-      </div>,
+      </HeaderTitle>,
     )
   }
 
@@ -340,167 +338,183 @@ export const MainLayout = ({
   ].filter(Boolean)
 
   return (
-    <ThemeProvider theme={muiTheme}>
-      <FullScreenContainer>
-        <FullScreen
-          handle={fullScreenHandle}
-          onChange={(open) => {
-            if (!open) {
-              fullScreenHandle.exit()
-              action("HEADER_BUTTON_CLICKED", "buttonName")("Window")
-            }
-          }}
+    <FullScreenContainer>
+      <FullScreen
+        handle={fullScreenHandle}
+        onChange={(open) => {
+          if (!open) {
+            fullScreenHandle.exit()
+            action("HEADER_BUTTON_CLICKED", "buttonName")("Window")
+          }
+        }}
+      >
+        <HotkeyDiv
+          tabIndex={-1}
+          ref={innerContainerRef}
+          onMouseDown={refocusOnMouseEvent}
+          onMouseOver={refocusOnMouseEvent}
+          handlers={hotkeyHandlers}
+          fullscreen={state.fullScreen}
         >
-          <HotkeyDiv
-            tabIndex={-1}
-            divRef={innerContainerRef}
-            onMouseDown={refocusOnMouseEvent}
-            onMouseOver={refocusOnMouseEvent}
-            handlers={hotkeyHandlers}
-            className={classnames(
-              classes.container,
-              state.fullScreen && "Fullscreen",
-            )}
+          <Workspace
+            allowFullscreen
+            iconDictionary={iconDictionary}
+            hideHeader={hideHeader}
+            hideHeaderText={hideHeaderText}
+            headerLeftSide={headerLeftSideItems}
+            headerItems={[
+              !hidePrev && { name: "Prev", label: t("header.prev", "Prev") },
+              !hideNext && { name: "Next", label: t("header.next", "Next") },
+              state.annotationType !== "video"
+                ? null
+                : !state.videoPlaying
+                  ? { name: "Play", label: t("header.play", "Play") }
+                  : { name: "Pause", label: t("header.pause", "Pause") },
+              !hideClone &&
+                !nextImageHasRegions &&
+                activeImage &&
+                activeImage.regions && {
+                  name: "Clone",
+                  label: t("header.clone", "Clone"),
+                },
+              !hideSettings && {
+                name: "Settings",
+                label: t("header.settings", "Settings"),
+              },
+              !hideFullScreen &&
+                (state.fullScreen
+                  ? { name: "Window", label: t("header.window", "Window") }
+                  : {
+                      name: "Fullscreen",
+                      label: t("header.fullscreen", "Fullscreen"),
+                    }),
+              !hideSave && { name: "Save", label: t("header.save", "Save") },
+            ].filter(Boolean)}
+            onClickHeaderItem={onClickHeaderItem}
+            onClickIconSidebarItem={onClickIconSidebarItem}
+            selectedTools={[
+              state.selectedTool,
+              state.showTags && "show-tags",
+              state.showMask && "show-mask",
+            ].filter(Boolean)}
+            iconSidebarItems={[
+              {
+                name: "select",
+                helperText:
+                  t("tools.select", "Select") +
+                  getHotkeyHelpText("select_tool"),
+                alwaysShowing: true,
+              },
+              {
+                name: "pan",
+                helperText:
+                  t("tools.pan", "Drag/Pan (right or middle click)") +
+                  getHotkeyHelpText("pan_tool"),
+                alwaysShowing: true,
+              },
+              {
+                name: "zoom",
+                helperText:
+                  t("tools.zoom", "Zoom In/Out (scroll)") +
+                  getHotkeyHelpText("zoom_tool"),
+                alwaysShowing: true,
+              },
+              {
+                name: "show-tags",
+                helperText: t("tools.showTags", "Show / Hide Tags"),
+                alwaysShowing: true,
+              },
+              {
+                name: "create-point",
+                helperText:
+                  t("tools.createPoint", "Add Point") +
+                  getHotkeyHelpText("create_point"),
+              },
+              {
+                name: "create-box",
+                helperText:
+                  t("tools.createBox", "Add Bounding Box") +
+                  getHotkeyHelpText("create_bounding_box"),
+              },
+              {
+                name: "create-polygon",
+                helperText:
+                  t("tools.createPolygon", "Add Polygon") +
+                  getHotkeyHelpText("create_polygon"),
+              },
+              {
+                name: "create-line",
+                helperText: t("tools.createLine", "Add Line"),
+              },
+              {
+                name: "create-expanding-line",
+                helperText: t(
+                  "tools.createExpandingLine",
+                  "Add Expanding Line",
+                ),
+              },
+              {
+                name: "create-keypoints",
+                helperText: t("tools.createKeypoints", "Add Keypoints (Pose)"),
+              },
+              state.fullImageSegmentationMode && {
+                name: "show-mask",
+                alwaysShowing: true,
+                helperText: t("tools.showMask", "Show / Hide Mask"),
+              },
+              {
+                name: "modify-allowed-area",
+                helperText: t("tools.modifyAllowedArea", "Modify Allowed Area"),
+              },
+            ]
+              .filter(Boolean)
+              .filter(
+                (a) =>
+                  a.alwaysShowing ||
+                  (state.enabledTools && state.enabledTools.includes(a.name)),
+              )}
+            rightSidebarItems={rightSidebarItems}
           >
-            <Workspace
-              allowFullscreen
-              iconDictionary={iconDictionary}
-              hideHeader={hideHeader}
-              hideHeaderText={hideHeaderText}
-              headerLeftSide={headerLeftSideItems}
-              headerItems={[
-                !hidePrev && { name: "Prev", label: t("header.prev", "Prev") },
-                !hideNext && { name: "Next", label: t("header.next", "Next") },
-                state.annotationType !== "video"
-                  ? null
-                  : !state.videoPlaying
-                    ? { name: "Play", label: t("header.play", "Play") }
-                    : { name: "Pause", label: t("header.pause", "Pause") },
-                !hideClone &&
-                  !nextImageHasRegions &&
-                  activeImage &&
-                  activeImage.regions && {
-                    name: "Clone",
-                    label: t("header.clone", "Clone"),
-                  },
-                !hideSettings && {
-                  name: "Settings",
-                  label: t("header.settings", "Settings"),
-                },
-                !hideFullScreen &&
-                  (state.fullScreen
-                    ? { name: "Window", label: t("header.window", "Window") }
-                    : {
-                        name: "Fullscreen",
-                        label: t("header.fullscreen", "Fullscreen"),
-                      }),
-                !hideSave && { name: "Save", label: t("header.save", "Save") },
-              ].filter(Boolean)}
-              onClickHeaderItem={onClickHeaderItem}
-              onClickIconSidebarItem={onClickIconSidebarItem}
-              selectedTools={[
-                state.selectedTool,
-                state.showTags && "show-tags",
-                state.showMask && "show-mask",
-              ].filter(Boolean)}
-              iconSidebarItems={[
-                {
-                  name: "select",
-                  helperText:
-                    t("tools.select", "Select") +
-                    getHotkeyHelpText("select_tool"),
-                  alwaysShowing: true,
-                },
-                {
-                  name: "pan",
-                  helperText:
-                    t("tools.pan", "Drag/Pan (right or middle click)") +
-                    getHotkeyHelpText("pan_tool"),
-                  alwaysShowing: true,
-                },
-                {
-                  name: "zoom",
-                  helperText:
-                    t("tools.zoom", "Zoom In/Out (scroll)") +
-                    getHotkeyHelpText("zoom_tool"),
-                  alwaysShowing: true,
-                },
-                {
-                  name: "show-tags",
-                  helperText: t("tools.showTags", "Show / Hide Tags"),
-                  alwaysShowing: true,
-                },
-                {
-                  name: "create-point",
-                  helperText:
-                    t("tools.createPoint", "Add Point") +
-                    getHotkeyHelpText("create_point"),
-                },
-                {
-                  name: "create-box",
-                  helperText:
-                    t("tools.createBox", "Add Bounding Box") +
-                    getHotkeyHelpText("create_bounding_box"),
-                },
-                {
-                  name: "create-polygon",
-                  helperText:
-                    t("tools.createPolygon", "Add Polygon") +
-                    getHotkeyHelpText("create_polygon"),
-                },
-                {
-                  name: "create-line",
-                  helperText: t("tools.createLine", "Add Line"),
-                },
-                {
-                  name: "create-expanding-line",
-                  helperText: t(
-                    "tools.createExpandingLine",
-                    "Add Expanding Line",
-                  ),
-                },
-                {
-                  name: "create-keypoints",
-                  helperText: t(
-                    "tools.createKeypoints",
-                    "Add Keypoints (Pose)",
-                  ),
-                },
-                state.fullImageSegmentationMode && {
-                  name: "show-mask",
-                  alwaysShowing: true,
-                  helperText: t("tools.showMask", "Show / Hide Mask"),
-                },
-                {
-                  name: "modify-allowed-area",
-                  helperText: t(
-                    "tools.modifyAllowedArea",
-                    "Modify Allowed Area",
-                  ),
-                },
-              ]
-                .filter(Boolean)
-                .filter(
-                  (a) =>
-                    a.alwaysShowing ||
-                    (state.enabledTools && state.enabledTools.includes(a.name)),
-                )}
-              rightSidebarItems={rightSidebarItems}
-            >
-              {canvas}
-            </Workspace>
-            <SettingsDialog
-              open={state.settingsOpen}
-              onClose={() =>
-                dispatch({
-                  type: "HEADER_BUTTON_CLICKED",
-                  buttonName: "Settings",
-                })
-              }
-            />
-          </HotkeyDiv>
-        </FullScreen>
-      </FullScreenContainer>
+            {canvas}
+          </Workspace>
+          <SettingsDialog
+            open={state.settingsOpen}
+            onClose={() =>
+              dispatch({
+                type: "HEADER_BUTTON_CLICKED",
+                buttonName: "Settings",
+              })
+            }
+          />
+        </HotkeyDiv>
+      </FullScreen>
+    </FullScreenContainer>
+  )
+}
+
+// Outer wrapper component that provides the theme
+export const MainLayout = (props) => {
+  const { theme, ...rest } = props
+
+  // Determine the Material-UI theme to use
+  const muiTheme = useMemo(() => {
+    if (!theme) {
+      // Backward compatible: no theme prop = light mode
+      return createDefaultTheme("light")
+    }
+
+    if (typeof theme === "string") {
+      // String mode: 'light' or 'dark'
+      return createDefaultTheme(theme)
+    }
+
+    // Full theme object provided by user
+    return theme
+  }, [theme])
+
+  return (
+    <ThemeProvider theme={muiTheme}>
+      <MainLayoutInner {...rest} theme={theme} />
     </ThemeProvider>
   )
 }
