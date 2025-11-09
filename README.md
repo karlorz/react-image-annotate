@@ -111,6 +111,34 @@ Or provide custom translations:
 </I18nProvider>
 ```
 
+## Theme Support (Light/Dark Mode)
+
+The component supports both light and dark themes:
+
+```javascript
+// Simple string mode (recommended)
+<ReactImageAnnotate theme="dark" {...props} />
+<ReactImageAnnotate theme="light" {...props} />
+
+// Custom Material-UI theme
+import { createTheme } from '@mui/material/styles'
+
+const customTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#3f51b5' },
+    background: {
+      default: '#1a1a1a',
+      paper: '#2a2a2a',
+    },
+  },
+})
+
+<ReactImageAnnotate theme={customTheme} {...props} />
+```
+
+**Theme Integration**: The component respects the MUI theme palette and will automatically style all internal components (workspace, sidebars, dialogs) according to the theme mode. Perfect for applications with dynamic theme switching!
+
 To get the proper fonts, make sure to import the Inter UI or Roboto font, the
 following line added to a css file should suffice.
 
@@ -136,6 +164,7 @@ All of the following properties can be defined on the Annotator...
 | `images`                 | `Array<Image>`                                   | Array of images to load into annotator                                                  |               |
 | `showPointDistances`     | `boolean`                                        | Show distances between points.                                                          | `false`       |
 | `pointDistancePrecision` | `number`                                         | Precision on displayed points (e.g. 3 => 0.123)                                         |               |
+| `theme`                  | `"light"` \| `"dark"` \| `Theme`                 | Theme mode (string) or full MUI theme object for styling the component.                 | `"light"`     |
 | `onExit`                 | `MainLayoutState => any`                         | Called when "Save" is called.                                                           |               |
 | `RegionEditLabel`        | `Node`                                           | React Node overriding the form to update the region (see [`RegionLabel`](https://github.com/karlorz/react-image-annotate/blob/master/src/RegionLabel/index.js))                                                          |               |
 | `allowComments`          | `boolean`                                        | Show a textarea to add comments on each annotation.                                     | `false`       |

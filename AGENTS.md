@@ -370,6 +370,65 @@ Expected Actions:
 
 ## Recent Updates
 
+### v4.0.2 - Theme Support & Dark Mode (2025-11-09)
+
+**Full Dark Mode Support Added** ✅
+
+The component now fully supports light and dark themes through the `theme` prop:
+
+#### Implementation Details
+- **`theme` prop** added to Annotator component - accepts `"light"`, `"dark"`, or full MUI theme object
+- **RegionTags component** made theme-aware - lock icons use `theme.palette.background.paper` instead of hardcoded `#fff`
+- **Theme provider** updated with `mode` prop support for standalone usage
+- **TypeScript types** updated in `src/hooks/types.ts` to include theme configuration
+- **Backward compatible** - theme prop is optional, defaults to light mode
+
+#### Files Modified
+1. `src/Annotator/index.jsx` - Added theme prop and forwarded to MainLayout
+2. `src/RegionTags/index.jsx` - Replaced hardcoded white backgrounds with theme colors
+3. `src/Theme/index.jsx` - Added mode prop (light/dark) support
+4. `src/hooks/types.ts` - Added theme to AnnotatorConfig interface
+5. `src/Annotator/index.story.jsx` - Added Dark Mode, Light Mode, and Theme Switcher stories
+
+#### Usage
+```javascript
+// String mode (recommended)
+<ReactImageAnnotate theme="dark" {...props} />
+<ReactImageAnnotate theme="light" {...props} />
+
+// Custom MUI theme
+import { createTheme } from '@mui/material/styles'
+const customTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: { main: '#3f51b5' },
+  },
+})
+<ReactImageAnnotate theme={customTheme} {...props} />
+```
+
+#### Theme-Aware Components
+- ✅ WorkspaceLayout (Workspace, WorkContainer, RightSidebar) - Already theme-aware
+- ✅ MainLayout - Full theme support with mode detection
+- ✅ RegionTags - Lock icons now respect theme
+- ✅ All MUI components automatically inherit theme
+
+#### Testing
+New Storybook stories available:
+- **Dark Mode** - `/story/annotator--dark-mode`
+- **Light Mode** - `/story/annotator--light-mode`
+- **Theme Switcher** - `/story/annotator--theme-switcher` (interactive demo)
+
+#### Key Architecture Notes
+The WorkspaceLayout components (`src/WorkspaceLayout/*.jsx`) were already correctly implemented with theme-aware styled components using:
+- `theme.palette.background.default` for main backgrounds
+- `theme.palette.background.paper` for surfaces
+- `theme.palette.mode === "dark"` for conditional styling
+- `theme.palette.divider` for borders
+- `theme.palette.text.primary` and `theme.palette.text.secondary` for text colors
+
+The issue was simply that the theme prop wasn't being passed through from the Annotator component to MainLayout.
+
 ### v2.0.0 - Full React 19 StrictMode Support (2025-11-07)
 
 **Major Achievement: Full React 19 StrictMode Compliance** ✅

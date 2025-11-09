@@ -4,6 +4,7 @@ import React from "react"
 import Paper from "@mui/material/Paper"
 import DefaultRegionLabel from "../RegionLabel"
 import LockIcon from "@mui/icons-material/Lock"
+import { useTheme } from "@mui/material/styles"
 
 const copyWithout = (obj, ...args) => {
   const newObj = { ...obj }
@@ -29,6 +30,7 @@ export const RegionTags = ({
   onRegionClassAdded,
   allowComments,
 }) => {
+  const theme = useTheme()
   const RegionLabel =
     RegionEditLabel != null ? RegionEditLabel : DefaultRegionLabel
   return regions
@@ -64,7 +66,7 @@ export const RegionTags = ({
                 left: 0,
                 ...(displayOnTop ? { bottom: 0 } : { top: 0 }),
                 zIndex: 10,
-                backgroundColor: "#fff",
+                backgroundColor: theme.palette.background.paper,
                 borderRadius: 4,
                 padding: 2,
                 paddingBottom: 0,
@@ -72,7 +74,13 @@ export const RegionTags = ({
                 pointerEvents: "none",
               }}
             >
-              <LockIcon style={{ width: 16, height: 16, color: "#333" }} />
+              <LockIcon
+                style={{
+                  width: 16,
+                  height: 16,
+                  color: theme.palette.text.secondary,
+                }}
+              />
             </Paper>
           </div>
         )

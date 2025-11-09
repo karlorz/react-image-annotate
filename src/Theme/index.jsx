@@ -18,29 +18,34 @@ const FONT_STACK = [
   '"Segoe UI Symbol"',
 ].join(", ")
 
-const theme = createTheme({
-  typography: {
-    fontFamily: FONT_STACK,
-  },
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          textTransform: "none",
+const createCustomTheme = (mode = "light") =>
+  createTheme({
+    palette: {
+      mode: mode,
+    },
+    typography: {
+      fontFamily: FONT_STACK,
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          root: {
+            textTransform: "none",
+          },
+        },
+      },
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            fontFamily: FONT_STACK,
+          },
         },
       },
     },
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          fontFamily: FONT_STACK,
-        },
-      },
-    },
-  },
-})
+  })
 
-export const Theme = ({ children }) => {
+export const Theme = ({ children, mode = "light" }) => {
+  const theme = React.useMemo(() => createCustomTheme(mode), [mode])
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -51,6 +56,7 @@ export const Theme = ({ children }) => {
 
 Theme.propTypes = {
   children: PropTypes.node.isRequired,
+  mode: PropTypes.oneOf(["light", "dark"]),
 }
 
 export default Theme

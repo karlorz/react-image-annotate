@@ -46,6 +46,7 @@ export const Annotator = ({
   hideFullScreen,
   hideSave,
   allowComments,
+  theme, // NEW: Accept theme prop ('light', 'dark', or MUI theme object)
 }) => {
   // Use the headless hook for all business logic
   const { state, dispatch, onRegionClassAdded } = useAnnotator({
@@ -96,6 +97,7 @@ export const Annotator = ({
           hideSettings={hideSettings}
           hideFullScreen={hideFullScreen}
           hideSave={hideSave}
+          theme={theme}
         />
       </SettingsProvider>
     </ErrorBoundary>
