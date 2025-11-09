@@ -53,6 +53,18 @@ export interface AnnotatorConfig {
   // Segmentation options
   autoSegmentationOptions?: { type: string; [key: string]: any }
 
+  // UI configuration (for Annotator component, not headless hook)
+  theme?: "light" | "dark" | any // MUI theme object or mode string
+  hideHeader?: boolean
+  hideHeaderText?: boolean
+  hideNext?: boolean
+  hidePrev?: boolean
+  hideClone?: boolean
+  hideSettings?: boolean
+  hideFullScreen?: boolean
+  hideSave?: boolean
+  RegionEditLabel?: any
+
   // Callbacks
   onExit?: (output: AnnotatorOutput) => void
   onNextImage?: (output: AnnotatorOutput) => void

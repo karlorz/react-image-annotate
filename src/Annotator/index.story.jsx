@@ -805,3 +805,136 @@ export const HideHeader = () => (
     ]}
   />
 )
+
+export const DarkMode = () => (
+  <div style={{ backgroundColor: "#1a1a1a", minHeight: "100vh", padding: 20 }}>
+    <Annotator
+      onExit={fn()}
+      theme="dark"
+      labelImages
+      regionClsList={["Alpha", "Beta", "Charlie", "Delta"]}
+      regionTagList={["tag1", "tag2", "tag3"]}
+      imageClsList={["Alpha", "Beta", "Charlie", "Delta"]}
+      imageTagList={["tag1", "tag2", "tag3"]}
+      images={[
+        {
+          src: exampleImage,
+          name: "Seve's Desk",
+          regions: testRegions,
+        },
+        {
+          src: "https://loremflickr.com/100/100/cars?lock=1",
+          name: "Frame 0036",
+        },
+        {
+          src: "https://loremflickr.com/100/100/cars?lock=2",
+          name: "Frame 0037",
+        },
+        {
+          src: "https://loremflickr.com/100/100/cars?lock=3",
+          name: "Frame 0038",
+        },
+      ]}
+    />
+  </div>
+)
+
+DarkMode.story = {
+  name: "Dark Mode Theme",
+}
+
+export const LightMode = () => (
+  <div style={{ backgroundColor: "#ffffff", minHeight: "100vh", padding: 20 }}>
+    <Annotator
+      onExit={fn()}
+      theme="light"
+      labelImages
+      regionClsList={["Alpha", "Beta", "Charlie", "Delta"]}
+      regionTagList={["tag1", "tag2", "tag3"]}
+      imageClsList={["Alpha", "Beta", "Charlie", "Delta"]}
+      imageTagList={["tag1", "tag2", "tag3"]}
+      images={[
+        {
+          src: exampleImage,
+          name: "Seve's Desk",
+          regions: testRegions,
+        },
+        {
+          src: "https://loremflickr.com/100/100/cars?lock=1",
+          name: "Frame 0036",
+        },
+        {
+          src: "https://loremflickr.com/100/100/cars?lock=2",
+          name: "Frame 0037",
+        },
+        {
+          src: "https://loremflickr.com/100/100/cars?lock=3",
+          name: "Frame 0038",
+        },
+      ]}
+    />
+  </div>
+)
+
+LightMode.story = {
+  name: "Light Mode Theme (Explicit)",
+}
+
+export const ThemeSwitcher = () => {
+  const [isDark, setIsDark] = useState(false)
+
+  return (
+    <div style={{ backgroundColor: isDark ? "#1a1a1a" : "#ffffff", minHeight: "100vh" }}>
+      <div style={{ padding: 20, textAlign: "center" }}>
+        <button
+          onClick={() => setIsDark(!isDark)}
+          style={{
+            padding: "10px 20px",
+            fontSize: 16,
+            cursor: "pointer",
+            backgroundColor: isDark ? "#333" : "#ddd",
+            color: isDark ? "#fff" : "#000",
+            border: "none",
+            borderRadius: 4,
+            marginBottom: 20,
+          }}
+        >
+          Switch to {isDark ? "Light" : "Dark"} Mode
+        </button>
+      </div>
+      <Annotator
+        onExit={fn()}
+        theme={isDark ? "dark" : "light"}
+        labelImages
+        regionClsList={["Alpha", "Beta", "Charlie", "Delta"]}
+        regionTagList={["tag1", "tag2", "tag3"]}
+        imageClsList={["Alpha", "Beta", "Charlie", "Delta"]}
+        imageTagList={["tag1", "tag2", "tag3"]}
+        images={[
+          {
+            src: exampleImage,
+            name: "Seve's Desk",
+            regions: testRegions,
+          },
+          {
+            src: "https://loremflickr.com/100/100/cars?lock=1",
+            name: "Frame 0036",
+          },
+          {
+            src: "https://loremflickr.com/100/100/cars?lock=2",
+            name: "Frame 0037",
+          },
+          {
+            src: "https://loremflickr.com/100/100/cars?lock=3",
+            name: "Frame 0038",
+          },
+        ]}
+      />
+    </div>
+  )
+}
+
+ThemeSwitcher.story = {
+  name: "Interactive Theme Switcher",
+}
+
