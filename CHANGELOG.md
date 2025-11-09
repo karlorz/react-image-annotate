@@ -1,3 +1,10 @@
+## [4.0.3](https://github.com/karlorz/react-image-annotate/compare/v4.0.2...v4.0.3) (2025-11-09)
+
+
+### Bug Fixes
+
+* Add full dark mode support and theme prop integration ([#10](https://github.com/karlorz/react-image-annotate/issues/10)) ([a8b51ec](https://github.com/karlorz/react-image-annotate/commit/a8b51ec71dc939090bf10237fc3c5a0532007387))
+
 ## [4.0.2](https://github.com/karlorz/react-image-annotate/compare/v4.0.1...v4.0.2) (2025-11-08)
 
 
