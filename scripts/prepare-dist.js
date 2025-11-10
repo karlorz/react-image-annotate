@@ -16,14 +16,14 @@ const distPkg = {
   version: rootPkg.version,
   type: rootPkg.type,
   description: rootPkg.description,
-  main: 'index.js', // Changed from dist/index.js
-  module: 'index.mjs', // Changed from dist/index.mjs
-  types: 'index.d.ts', // Changed from dist/index.d.ts
+  main: 'index.cjs', // CommonJS entry point
+  module: 'index.js', // ES module entry point
+  types: 'index.d.ts', // TypeScript definitions
   exports: {
     '.': {
-      types: './index.d.ts', // Changed from ./dist/index.d.ts
-      import: './index.mjs', // Changed from ./dist/index.mjs
-      require: './index.js', // Changed from ./dist/index.js
+      types: './index.d.ts',
+      import: './index.js', // ES module (Vite generates .js not .mjs)
+      require: './index.cjs', // CommonJS module
     },
     './headless': {
       types: './headless.d.ts',
