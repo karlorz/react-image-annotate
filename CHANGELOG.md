@@ -1,3 +1,10 @@
+## [4.0.4](https://github.com/karlorz/react-image-annotate/compare/v4.0.3...v4.0.4) (2025-11-10)
+
+
+### Bug Fixes
+
+* correct package.json exports to match Vite build output ([b01a73b](https://github.com/karlorz/react-image-annotate/commit/b01a73b68a1501d4e905dff97bc2a2412c47bca0)), closes [#10](https://github.com/karlorz/react-image-annotate/issues/10)
+
 ## [4.0.3](https://github.com/karlorz/react-image-annotate/compare/v4.0.2...v4.0.3) (2025-11-09)
 
 
