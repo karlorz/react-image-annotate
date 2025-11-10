@@ -33,7 +33,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^3.1.0",
     "@monaco-editor/react": "^4.6.0",
-    "@mui/icons-material": "^6.3.0",
+    "@mui/icons-material": "^7.3.5",
     "@mui/material": "^6.3.0",
     "@mui/styles": "^6.3.0",
     "@semantic-release/git": "^9.0.0",
