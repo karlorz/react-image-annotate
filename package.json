@@ -42,7 +42,7 @@
     "classnames": "^2.5.1",
     "color-alpha": "^1.0.4",
     "get-image-data": "^5.0.0",
-    "immer": "^10.1.1",
+    "immer": "^11.0.1",
     "material-survey": "^2.1.0",
     "mmgc1-cpp": "^1.0.51",
     "moment": "^2.30.1",
