@@ -1,3 +1,10 @@
+## [4.0.5](https://github.com/karlorz/react-image-annotate/compare/v4.0.4...v4.0.5) (2025-12-01)
+
+
+### Bug Fixes
+
+* disable new eslint-plugin-react-hooks v7 rules ([7d82f03](https://github.com/karlorz/react-image-annotate/commit/7d82f032b48c87a157a534047a877db121d6c5e4))
+
 ## [4.0.4](https://github.com/karlorz/react-image-annotate/compare/v4.0.3...v4.0.4) (2025-11-10)
 
 
