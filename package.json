@@ -41,7 +41,7 @@
     "clamp": "^1.0.1",
     "classnames": "^2.5.1",
     "color-alpha": "^1.0.4",
-    "get-image-data": "^3.0.1",
+    "get-image-data": "^5.0.0",
     "immer": "^10.1.1",
     "material-survey": "^2.1.0",
     "mmgc1-cpp": "^1.0.51",
