@@ -9,7 +9,7 @@ import {
   faSearch,
   faTag,
   faCrosshairs,
-  faDrawSquare, // Renamed from faVectorSquare in FontAwesome 7
+  faBorderAll, // Replacement for faVectorSquare (removed in FontAwesome 7 free)
   faDrawPolygon,
   faGripLines,
   faChartLine,
@@ -39,7 +39,7 @@ export const iconDictionary = {
   zoom: iconFromFa(faSearch),
   "show-tags": iconFromFa(faTag),
   "create-point": iconFromFa(faCrosshairs),
-  "create-box": iconFromFa(faDrawSquare),
+  "create-box": iconFromFa(faBorderAll),
   "create-polygon": iconFromFa(faDrawPolygon),
   "create-expanding-line": iconFromFa(faGripLines),
   "create-line": iconFromFa(faChartLine),
