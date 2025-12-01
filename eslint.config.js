@@ -48,6 +48,12 @@ export default [
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // Disable new React Compiler rules from eslint-plugin-react-hooks v7 until codebase is refactored
+      // These rules are for React Compiler optimization and can be enabled later
+      // See: https://react.dev/reference/react/useRef#caveats
+      'react-hooks/refs': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/static-components': 'off',
       'react-refresh/only-export-components': 'warn',
       'react/prop-types': 'off',
       'react/react-in-jsx-scope': 'off',
