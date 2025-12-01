@@ -1,3 +1,10 @@
+## [4.0.7](https://github.com/karlorz/react-image-annotate/compare/v4.0.6...v4.0.7) (2025-12-01)
+
+
+### Bug Fixes
+
+* use faBorderAll for create-box (faVectorSquare removed in FA7 free) ([4402bcc](https://github.com/karlorz/react-image-annotate/commit/4402bccf374aecde6e3bf858d8e61496c1acd26c)), closes [#pages](https://github.com/karlorz/react-image-annotate/issues/pages)
+
 ## [4.0.6](https://github.com/karlorz/react-image-annotate/compare/v4.0.5...v4.0.6) (2025-12-01)
 
 
