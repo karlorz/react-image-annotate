@@ -1,3 +1,10 @@
+## [4.0.6](https://github.com/karlorz/react-image-annotate/compare/v4.0.5...v4.0.6) (2025-12-01)
+
+
+### Bug Fixes
+
+* update FontAwesome 7 icon name faVectorSquare -> faDrawSquare ([aa39237](https://github.com/karlorz/react-image-annotate/commit/aa39237da7a0d9780b555b483e52a00d4fe85cb3))
+
 ## [4.0.5](https://github.com/karlorz/react-image-annotate/compare/v4.0.4...v4.0.5) (2025-12-01)
 
 
