@@ -1,6 +1,6 @@
 # React Image Annotate
 
-[![npm version](https://badge.fury.io/js/%40karlorz%2Freact-image-annotate.svg)](https://badge.fury.io/js/%40karlorz%2Freact-image-annotate)
+[![npm version](https://img.shields.io/npm/v/@karlorz/react-image-annotate.svg)](https://www.npmjs.com/package/@karlorz/react-image-annotate)
 
 The best image/video annotation tool ever. [Check out the demo here](https://karlorz.github.io/react-image-annotate/). Or the [code sandbox here](https://codesandbox.io/s/react-image-annotate-example-38tsc?file=/src/App.js:0-403).
 
